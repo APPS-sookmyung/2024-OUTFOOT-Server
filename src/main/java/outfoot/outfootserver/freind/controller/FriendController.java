@@ -18,7 +18,7 @@ import outfoot.outfootserver.freind.service.FriendService;
 public class FriendController {
     private final FriendService friendService;
 
-    @PostMapping("/addfriend")
+    @PostMapping("/friends")
     public BasicResponse<String> AddFriend (@Valid @RequestBody AddFriendRequest dto){
         long friendId = friendService.save(dto); // Friend 엔티티 저장
         return ResponseUtil.success("친구 추가 성공" + friendId);
