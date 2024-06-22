@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import outfoot.outfootserver.freind.domain.Friend;
 
+import outfoot.outfootserver.freind.dto.AddFriendRequest;
 import outfoot.outfootserver.freind.exception.AuthErrorCode;
 import outfoot.outfootserver.freind.exception.AuthException;
 import outfoot.outfootserver.freind.repository.FriendRepository;
@@ -15,13 +16,12 @@ public class FriendService {
     private final FriendRepository friendRepository;
 
     @Transactional
-    public long save(Friend friend) {
-        friendRepository.findByNickname(friend.getNickname()).ifPresent(e -> {
+    public long save(AddFriendRequest dto){
+        friendRepository.findByNickname(dto.getNickname()).ifPresent(e -> {
             throw new AuthException(AuthErrorCode.FRIEND_DUPLICATED);
         });
-
+        Friend friend = AddFriendRequest.toFriend(dto);
         Friend savedFriend = friendRepository.save(friend);
-        return savedFriend.getId(); //저장 엔티티 ID 반환
-
+        return savedFriend.getId();
     }
 }

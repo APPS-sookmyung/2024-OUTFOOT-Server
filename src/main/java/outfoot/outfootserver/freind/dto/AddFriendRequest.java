@@ -11,7 +11,6 @@ import outfoot.outfootserver.freind.domain.Friend;
 public class AddFriendRequest {
     @NotBlank
     private String nickname;
-    @NotBlank
 
     public static Friend toFriend(AddFriendRequest dto) {
         return Friend.builder()
