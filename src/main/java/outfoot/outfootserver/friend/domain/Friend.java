@@ -1,4 +1,4 @@
-package outfoot.outfootserver.freind.domain;
+package outfoot.outfootserver.friend.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

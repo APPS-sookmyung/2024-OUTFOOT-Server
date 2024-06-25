@@ -1,4 +1,4 @@
-package outfoot.outfootserver.freind.exception;
+package outfoot.outfootserver.friend.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

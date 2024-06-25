@@ -1,14 +1,14 @@
-package outfoot.outfootserver.freind.service;
+package outfoot.outfootserver.friend.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import outfoot.outfootserver.freind.domain.Friend;
+import outfoot.outfootserver.friend.domain.Friend;
 
-import outfoot.outfootserver.freind.dto.AddFriendRequest;
-import outfoot.outfootserver.freind.exception.AuthErrorCode;
-import outfoot.outfootserver.freind.exception.AuthException;
-import outfoot.outfootserver.freind.repository.FriendRepository;
+import outfoot.outfootserver.friend.dto.AddFriendRequest;
+import outfoot.outfootserver.friend.exception.AuthErrorCode;
+import outfoot.outfootserver.friend.exception.AuthException;
+import outfoot.outfootserver.friend.repository.FriendRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +23,9 @@ public class FriendService {
         Friend friend = AddFriendRequest.toFriend(dto);
         Friend savedFriend = friendRepository.save(friend);
         return savedFriend.getId();
+    }
+
+    public void delete(long id){
+        friendRepository.deleteById(id);
     }
 }

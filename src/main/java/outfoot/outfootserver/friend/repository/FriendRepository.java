@@ -1,7 +1,7 @@
-package outfoot.outfootserver.freind.repository;
+package outfoot.outfootserver.friend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import outfoot.outfootserver.freind.domain.Friend;
+import outfoot.outfootserver.friend.domain.Friend;
 
 import java.util.Optional;
 

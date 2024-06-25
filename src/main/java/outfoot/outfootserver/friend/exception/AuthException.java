@@ -1,4 +1,4 @@
-package outfoot.outfootserver.freind.exception;
+package outfoot.outfootserver.friend.exception;
 
 public class AuthException extends RuntimeException {
     private AuthErrorCode code;
