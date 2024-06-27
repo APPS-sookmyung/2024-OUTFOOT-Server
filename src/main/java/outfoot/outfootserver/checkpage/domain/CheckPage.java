@@ -2,8 +2,8 @@ package outfoot.outfootserver.checkpage.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.common.BaseTimeEntity;
@@ -23,12 +23,21 @@ public class CheckPage extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @NotBlank
+    @NotBlank @Column(unique = true)
     private String title;
 
     private String intro;
+
     @NotBlank
-    private int animal_position;
+    private int animal_position = 1;
     @NotBlank
     private Animal animal;
+
+    @Builder
+    public CheckPage(Member member, String title, String intro, Animal animal) {
+        this.member = member;
+        this.title = title;
+        this.intro = intro;
+        this.animal = animal;
+    }
 }
