@@ -2,6 +2,7 @@ package outfoot.outfootserver.checkpage.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,9 +29,9 @@ public class CheckPage extends BaseTimeEntity {
 
     private String intro;
 
-    @NotBlank
     private int animal_position = 1;
-    @NotBlank
+
+    @NotNull
     private Animal animal;
 
     @Builder
