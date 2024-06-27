@@ -8,16 +8,9 @@ import outfoot.outfootserver.friend.domain.Friend;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AddFriendRequest {
+public class SearchFriendRequest {
     @NotBlank
     private String friendCode;
-
-    @NotBlank
-    private String nickname;
-
-    public static Friend toFriend(AddFriendRequest dto) {
-        return Friend.builder()
-                .nickname(dto.nickname)
-                .build();
-    }
 }
+
+

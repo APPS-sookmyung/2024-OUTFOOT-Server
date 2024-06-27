@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.common.BaseTimeEntity;
+import outfoot.outfootserver.member.Member;
 
 @Entity
 @Getter
@@ -16,10 +17,17 @@ public class Friend extends BaseTimeEntity {
 
     @Id @Column(name = "friend_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long friend_id;
+
+    @Id @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long member_id;
 
     @NotNull @Column(unique = true)
     private String nickname;
+
+    @ManyToOne
+    Member memberjj
 
     @Builder
     public Friend(String nickname){
