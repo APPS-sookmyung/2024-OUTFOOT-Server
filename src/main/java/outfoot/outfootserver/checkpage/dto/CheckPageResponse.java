@@ -4,14 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 
-// 시작일, 제목, 위치
 @Builder
-public record CheckPageListResponse(@NotBlank String title, String createdAt, int animalPosition, String animal) {
+public record CheckPageResponse(@NotBlank String title, String intro, String createdAt, @NotBlank int animalPosition, @NotBlank String animal) {
 
-
-    public static CheckPageListResponse toCheckPageList(CheckPage checkPage) {
-        return CheckPageListResponse.builder()
+    public static CheckPageResponse toCheckPage(CheckPage checkPage) {
+        return CheckPageResponse.builder()
                 .title(checkPage.getTitle())
+                .intro(checkPage.getIntro())
                 .createdAt(checkPage.getCreatedAt())
                 .animalPosition(checkPage.getAnimalPosition())
                 .animal(checkPage.getAnimal())

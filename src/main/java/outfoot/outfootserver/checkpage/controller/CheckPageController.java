@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
+import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
@@ -29,5 +30,10 @@ public class CheckPageController {
     @GetMapping
     public BasicResponse<List<CheckPageListResponse>> findAllCheckPage() {
         return ResponseUtil.success(checkPageService.findAllCheckPage());
+    }
+
+    @GetMapping("/{check_page_id}/foot")
+    public BasicResponse<CheckPageResponse> findOne(@Valid @PathVariable(name = "check_page_id") Long checkPageId) {
+        return ResponseUtil.success(checkPageService.findCheckPage(checkPageId));
     }
 }
