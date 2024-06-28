@@ -20,9 +20,9 @@ public class CheckPage extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id", nullable = false)
+//    private Member member;
 
     @NotBlank @Column(unique = true)
     private String title;
@@ -32,11 +32,12 @@ public class CheckPage extends BaseTimeEntity {
     private int animal_position = 1;
 
     @NotNull
-    private Animal animal;
+    private String animal;
 
     @Builder
-    public CheckPage(Member member, String title, String intro, Animal animal) {
-        this.member = member;
+//    public CheckPage(Member member, String title, String intro, Animal animal) {
+    public CheckPage(String title, String intro, String animal) {
+//        this.member = member;
         this.title = title;
         this.intro = intro;
         this.animal = animal;
