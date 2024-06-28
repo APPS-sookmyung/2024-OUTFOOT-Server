@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.common.BaseTimeEntity;
-import outfoot.outfootserver.member.domain.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,7 +28,7 @@ public class CheckPage extends BaseTimeEntity {
 
     private String intro;
 
-    private int animal_position = 1;
+    private int animalPosition = 1;
 
     @NotNull
     private String animal;

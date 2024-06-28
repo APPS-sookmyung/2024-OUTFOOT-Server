@@ -5,11 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.Animal;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
+import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.member.domain.Member;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,5 +37,14 @@ public class CheckPageService {
         CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName()));
 
         return checkPage.getId();
+    }
+
+    public List<CheckPageListResponse> findAllCheckPage () {
+        List<CheckPage> checkPageList = checkPageRepository.findAll();
+
+        // 엔티티 -> DTO
+        return checkPageList.stream()
+                .map(CheckPageListResponse::toCheckPageList)
+                .toList();
     }
 }

@@ -2,14 +2,14 @@ package outfoot.outfootserver.checkpage.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/checkpages")
@@ -24,5 +24,10 @@ public class CheckPageController {
 //        checkPageService.saveCheckPage(member, dto);
         Long checkPageId = checkPageService.saveCheckPage(dto);
         return ResponseUtil.success("목표 생성에 성공하였습니다. checkPageId = " + checkPageId);
+    }
+
+    @GetMapping
+    public BasicResponse<List<CheckPageListResponse>> findAllCheckPage() {
+        return ResponseUtil.success(checkPageService.findAllCheckPage());
     }
 }
