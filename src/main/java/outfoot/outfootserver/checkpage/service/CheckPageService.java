@@ -56,4 +56,13 @@ public class CheckPageService {
                 .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
         return CheckPageResponse.toCheckPage(checkPage);
     }
+
+
+    @Transactional
+    public Long deleteCheckPage(Long checkPageId) {
+        CheckPage checkPage = checkPageRepository.findById(checkPageId)
+                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
+        checkPageRepository.delete(checkPage);
+        return checkPageId;
+    }
 }

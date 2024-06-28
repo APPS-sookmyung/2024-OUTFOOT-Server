@@ -33,7 +33,13 @@ public class CheckPageController {
     }
 
     @GetMapping("/{check_page_id}/foot")
-    public BasicResponse<CheckPageResponse> findOne(@Valid @PathVariable(name = "check_page_id") Long checkPageId) {
+    public BasicResponse<CheckPageResponse> findOne(@PathVariable(name = "check_page_id") Long checkPageId) {
         return ResponseUtil.success(checkPageService.findCheckPage(checkPageId));
+    }
+
+    @DeleteMapping("/{check_page_id}")
+    public BasicResponse<String> deleteCheckPage(@PathVariable(name = "check_page_id") Long checkPageId) {
+        Long id = checkPageService.deleteCheckPage(checkPageId);
+        return ResponseUtil.success("목표 삭제에 성공하였습니다. checkPageId = " + id);
     }
 }
