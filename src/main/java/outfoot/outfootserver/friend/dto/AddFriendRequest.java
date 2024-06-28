@@ -10,9 +10,6 @@ import outfoot.outfootserver.friend.domain.Friend;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AddFriendRequest {
     @NotBlank
-    private String friendCode;
-
-    @NotBlank
     private String nickname;
 
     public static Friend toFriend(AddFriendRequest dto) {
