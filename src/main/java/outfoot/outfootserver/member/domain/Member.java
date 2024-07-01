@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.*;
 import outfoot.outfootserver.common.BaseTimeEntity;
+import outfoot.outfootserver.friend.domain.Friend;
+
+import java.util.List;
 
 @Entity @Getter
 @Table(name = "member")
@@ -35,6 +38,12 @@ public class Member extends BaseTimeEntity {
     private String code;
 
     private String myIntro;
+
+    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
+    private List<Friend> fromMember;
+
+    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
+    private List<Friend> toMember;
 
     @Builder
     public Member(String username, String nickname, String email, String password) {

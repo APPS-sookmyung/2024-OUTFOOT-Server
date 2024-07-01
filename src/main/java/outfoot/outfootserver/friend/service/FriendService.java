@@ -9,6 +9,7 @@ import outfoot.outfootserver.friend.dto.AddFriendRequest;
 import outfoot.outfootserver.friend.exception.AuthErrorCode;
 import outfoot.outfootserver.friend.exception.AuthException;
 import outfoot.outfootserver.friend.repository.FriendRepository;
+import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.repository.MemberRepository;
 
 @Service
@@ -18,17 +19,20 @@ public class FriendService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long addFriend(AddFriendRequest dto, Long memberId, Long friendMemberId){
-//        friend를 빌드할 때 친구의 멤버 아이디를 넣어야지! 했는데 아이디 못 넣음 이슈 어떡함?
-//        Friend friend = Friend.builder()
-//                .memberId(memberId)
-//                .friendMemberId(friendMemberId())
-//                .nickname(dto.getNickname())
-//                .build(); --> 하다가 불가능을 깨달은 원래 계획
+    public Long addFriend(Member from_member,Member to_member){
+        if (from_member.equals(to_member))
+            throw new AuthException(AuthErrorCode.NOT_FRINED_SELF);
+        if (friendRepository.findFriend(from_member, to_member).isPresent())
+            throw new AuthException(AuthErrorCode.FRIEND_DUPLICATED);
 
-        Friend friend = dto.toFriend();
-        friend = friendRepository.save(friend);
-        return friend.getFriendId();
+        Friend newFriend = Friend.builder()
+                .fromMember(from_member)
+                .toMember(to_member)
+                .nickname(from_member.getNickname() + " - " + to_member.getNickname())
+                .build();
+
+        friendRepository.save(newFriend);
+        return newFriend.getFriendId();
     }
 
     @Transactional
@@ -37,5 +41,13 @@ public class FriendService {
             throw new AuthException(AuthErrorCode.FRIEND_NOT_FOUND);
         }
         friendRepository.deleteById(friendId);
+    }
+
+    @Transactional(readOnly = true)
+    public Member searchFriend(String searchCode) {
+        Member member = memberRepository.findByCode(searchCode)
+                .orElseThrow(()->new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
+
+        return member;
     }
 }

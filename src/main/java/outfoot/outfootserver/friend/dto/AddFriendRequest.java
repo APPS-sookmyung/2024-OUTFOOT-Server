@@ -12,9 +12,9 @@ public class AddFriendRequest {
     @NotBlank
     private String nickname;
 
-    public static Friend toFriend(AddFriendRequest dto) {
+    public Friend toFriend() {
         return Friend.builder()
-                .nickname(dto.nickname)
+                .nickname(this.nickname)
                 .build();
     }
 }
