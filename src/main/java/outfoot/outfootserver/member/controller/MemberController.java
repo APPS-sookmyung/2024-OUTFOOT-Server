@@ -11,6 +11,11 @@ import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.service.MemberService;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/")
 @RequiredArgsConstructor
