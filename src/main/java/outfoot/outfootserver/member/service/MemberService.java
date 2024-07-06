@@ -3,6 +3,7 @@ package outfoot.outfootserver.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
@@ -41,7 +42,7 @@ public class MemberService {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             hashBytes = messageDigest.digest(friendCodeBytes);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new AuthException(AuthErrorCode.UUID_CREATE_ERROR);
         }
 
         StringBuilder sb = new StringBuilder();
