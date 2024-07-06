@@ -24,7 +24,7 @@ public class FriendService {
             throw new AuthException(AuthErrorCode.NOT_FRINED_SELF);
         if (friendRepository.findFriend(from_member, to_member).isPresent())
             throw new AuthException(AuthErrorCode.FRIEND_DUPLICATED);
-
+//        Friend newFriend = AddFriendRequest()
         Friend newFriend = Friend.builder()
                 .fromMember(from_member)
                 .toMember(to_member)

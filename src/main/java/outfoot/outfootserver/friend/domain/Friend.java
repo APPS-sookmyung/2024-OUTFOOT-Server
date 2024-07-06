@@ -11,7 +11,6 @@ import outfoot.outfootserver.member.domain.Member;
 @Table(name = "friend")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class Friend extends BaseTimeEntity {
 
     @Id @Column(name = "friend_id")
@@ -29,4 +28,11 @@ public class Friend extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "to_member_id")
     private Member toMember;
+
+    @Builder
+    public Friend(Member fromMember, Member toMember, String nickname){
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+        this.nickname = nickname;
+    }
 }
