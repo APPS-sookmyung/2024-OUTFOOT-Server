@@ -10,9 +10,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
+import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
+import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -23,9 +26,16 @@ class CheckPageServiceTest {
     @InjectMocks CheckPageService checkPageService;
 
     public static CheckPageRequest dto;
+    public static CheckPage checkPage;
 
     @BeforeEach
     public void setUp() {
+        checkPage = CheckPage.builder()
+                .title("목표")
+                .intro("한 줄 소개")
+                .animal("고양이")
+                .build();
+
         dto = CheckPageRequest.builder()
                 .title("목표")
                 .intro("한 줄 소개")
@@ -38,11 +48,6 @@ class CheckPageServiceTest {
     public void saveCheckPage() throws Exception {
         // static dto
         // given
-        CheckPage checkPage = CheckPage.builder()
-                .title("목표")
-                .intro("한 줄 소개")
-                .animal("고양이")
-                .build();
 
         // when
         when(checkPageRepository.save(any())).thenReturn(checkPage);
@@ -50,6 +55,21 @@ class CheckPageServiceTest {
 
         // then
         assertThat(checkPageResponse.animal()).isEqualTo("고양이");
+    }
+
+    @Test
+    @DisplayName("[예외] 중복 도장판")
+    public void duplicateSaveCheckPage() throws Exception {
+        // when
+        when(checkPageRepository.findByTitle(any())).thenThrow(new CheckPageException(CheckPageErrorCode.CHECKPAGE_DUPLICATION));
+
+
+        // then
+        CheckPageException e = assertThrows(CheckPageException.class, () -> {
+            checkPageService.saveCheckPage(dto);
+        });
+
+        assertThat(CheckPageErrorCode.CHECKPAGE_DUPLICATION).isEqualTo(e.getCode());
     }
 
 }
