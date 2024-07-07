@@ -58,6 +58,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "updated_at", length = 20)
     private LocalDateTime updatedAt;
 
+
+
     @Builder
     public Member(String username, String nickname, String email, String password) {
         this.username = username;

@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-@Table
+@Table(name = "refresh_tokens")
 public class RefreshToken {
 
     @Id
