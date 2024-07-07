@@ -4,7 +4,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import outfoot.outfootserver.exception.TokenErrorResult;
@@ -44,7 +44,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .claim("userId", userID.toString())
-                .issuedAt(new Date)
+                .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .compact();
     }
