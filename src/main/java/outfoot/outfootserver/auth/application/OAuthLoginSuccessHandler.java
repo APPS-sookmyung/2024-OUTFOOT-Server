@@ -33,7 +33,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     @Value("${jwt.access-token.expiration-time}")
     private long ACCESS_TOKEN_EXPIRATION_TIME;
 
-    @Value("$jwt.refresh-token.expiration-time}")
+    @Value("${jwt.refresh-token.expiration-time}")
     private long REFRESH_TOKEN_EXPIRATION_TIME;
 
     private OAuth2UserInfo oAuth2UserInfo = null;

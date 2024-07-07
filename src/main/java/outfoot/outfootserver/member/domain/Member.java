@@ -49,7 +49,7 @@ public class Member extends BaseTimeEntity {
     private String code;
 
     private String myIntro;
-
+/*
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, length = 20)
     private LocalDateTime createdAt;
@@ -58,6 +58,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "updated_at", length = 20)
     private LocalDateTime updatedAt;
 
+
+ */
 
 
     @Builder

@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
 
-    @Query("SELECT u FROM User u WHERE u.userId = :userId")
+    @Query("SELECT u FROM Member u WHERE u.userId = :userId")
     Optional<Member> findByUserId(UUID userId);
 
     Member findByProviderId(String providerId);
