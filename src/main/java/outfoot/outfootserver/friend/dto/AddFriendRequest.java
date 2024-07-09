@@ -2,19 +2,24 @@ package outfoot.outfootserver.friend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.friend.domain.Friend;
+import outfoot.outfootserver.member.domain.Member;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddFriendRequest {
-    @NotBlank
-    private String nickname;
+    private Member fromMember;
+    private Member toMember;
 
-    public Friend toFriend() {
+    public Friend toFriend(){
         return Friend.builder()
-                .nickname(this.nickname)
+                .fromMember(fromMember)
+                .toMember(toMember)
+                .nickname(toMember.getNickname())
                 .build();
     }
 }
