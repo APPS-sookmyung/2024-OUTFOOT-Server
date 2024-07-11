@@ -1,34 +1,19 @@
 package outfoot.outfootserver.checkpage.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import outfoot.outfootserver.ControllerTest;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
-import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
-import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
-import outfoot.outfootserver.common.GlobalExceptionHandler;
-
 import java.util.Locale;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,14 +21,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class CheckPageControllerTest {
+@ExtendWith(MockitoExtension.class)
+class CheckPageControllerTest extends ControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    protected ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private CheckPageService checkPageService;
 
@@ -52,12 +32,6 @@ class CheckPageControllerTest {
 
     @BeforeEach
     public void setUp() {
-
-        mockMvc = MockMvcBuilders.standaloneSetup(injectController())
-                .setControllerAdvice(GlobalExceptionHandler.class)
-                .addFilter(new CharacterEncodingFilter("UTF-8", true))
-                .build();
-
         checkPageRequest = CheckPageRequest.builder()
                 .title("목표")
                 .intro("한 줄 소개")
@@ -125,7 +99,7 @@ class CheckPageControllerTest {
                 .andExpect(jsonPath("$.response.errors.title").value("공백일 수 없습니다"));
     }
 
-    //    @Override
+    @Override
     protected Object injectController() {
         return new CheckPageController(checkPageService);
     }
