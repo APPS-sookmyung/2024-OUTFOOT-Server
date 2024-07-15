@@ -7,11 +7,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ErrorEntity;
 import outfoot.outfootserver.common.response.ResponseUtil;
+import outfoot.outfootserver.confirm.exception.ConfirmException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +34,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BasicResponse<ErrorEntity> checkPageBadRequestException(CheckPageException e) {
         log.error("CheckPage Not Found({})={}", e.getCode(), e.getMessage());
+        return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(ConfirmException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BasicResponse<ErrorEntity> ConfirmBadRequestException(ConfirmException e){
+        log.error("Confirm Not Found({})={}", e.getCode(), e.getMessage());
         return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
     }
 }

@@ -52,17 +52,20 @@ public class CheckPageService {
     }
 
     public CheckPageResponse findCheckPage(Long checkPageId) {
-        CheckPage checkPage = checkPageRepository.findById(checkPageId)
-                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
+        CheckPage checkPage = findById(checkPageId);
         return CheckPageResponse.toCheckPage(checkPage);
     }
 
 
     @Transactional
     public Long deleteCheckPage(Long checkPageId) {
-        CheckPage checkPage = checkPageRepository.findById(checkPageId)
-                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
+        CheckPage checkPage = findById(checkPageId);
         checkPageRepository.delete(checkPage);
         return checkPageId;
+    }
+
+    public CheckPage findById(Long checkPageId) {
+        return checkPageRepository.findById(checkPageId)
+                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
     }
 }
