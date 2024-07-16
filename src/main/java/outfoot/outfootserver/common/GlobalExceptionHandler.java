@@ -12,6 +12,7 @@ import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ErrorEntity;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
+import outfoot.outfootserver.emotion.exception.EmotionException;
 import outfoot.outfootserver.member.exception.AuthException;
 
 import java.util.HashMap;
@@ -49,6 +50,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BasicResponse<ErrorEntity> ConfirmBadRequestException(ConfirmException e){
         log.error("Confirm Not Found({})={}", e.getCode(), e.getMessage());
+        return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(EmotionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BasicResponse<ErrorEntity> EmotionInvalidRequestException(EmotionException e){
+        log.error("Emotion Invalid Request({})={}", e.getCode(), e.getMessage());
         return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
     }
 }

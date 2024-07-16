@@ -2,10 +2,7 @@ package outfoot.outfootserver.emotion.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
@@ -17,18 +14,29 @@ import outfoot.outfootserver.member.domain.Member;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/confirm")
+@RequestMapping("/confirm/dislike")
 public class DislikeController {
 
     private final DislikeService dislikeService;
     private final EmotionManageService emotionManageService;
 
-    @PostMapping("/dislike")
+    @PostMapping
     public BasicResponse<String> addDislike(@Valid @RequestBody EmotionRequest dto) {
         Member member = emotionManageService.loadMember(dto.memberId());
         CheckPage checkPage = emotionManageService.loadCheckPage(dto.checkPageId());
         Confirm confirm = emotionManageService.loadConfirm(dto.confirmId());
+
         dislikeService.addDislike(member, checkPage, confirm);
-        return ResponseUtil.success("싫어요 누르기에 성공하였습니다. Confirm id = " + dto.confirmId());
+        return ResponseUtil.success("부정 추가에 성공하였습니다. Confirm id = " + dto.confirmId());
+    }
+
+    @DeleteMapping
+    public BasicResponse<String> deleteDislike(@Valid @RequestBody EmotionRequest dto) {
+        Member member = emotionManageService.loadMember(dto.memberId());
+        CheckPage checkPage = emotionManageService.loadCheckPage(dto.checkPageId());
+        Confirm confirm = emotionManageService.loadConfirm(dto.confirmId());
+
+        dislikeService.cancelDislike(member, checkPage, confirm);
+        return ResponseUtil.success("부정 취소에 성공하였습니다. Confirm id = " + dto.confirmId());
     }
 }
