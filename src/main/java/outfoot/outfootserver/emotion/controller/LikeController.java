@@ -14,17 +14,27 @@ import outfoot.outfootserver.member.domain.Member;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/confirm")
+@RequestMapping("/confirm/like")
 public class LikeController {
     private final LikeService likeService;
     private final EmotionManageService emotionManageService;
 
-    @PostMapping("/like")
+    @PostMapping
     public BasicResponse<String> addLike(@Valid @RequestBody EmotionRequest dto) {
         Member member = emotionManageService.loadMember(dto.memberId());
         CheckPage checkPage = emotionManageService.loadCheckPage(dto.checkPageId());
         Confirm confirm = emotionManageService.loadConfirm(dto.confirmId());
         likeService.addLike(member, checkPage, confirm);
-        return ResponseUtil.success("좋아요 누르기에 성공하였습니다. Confirm id = " + dto.confirmId());
+        return ResponseUtil.success("인정 추가에 성공하였습니다. Confirm id = " + dto.confirmId());
+    }
+    
+    @DeleteMapping
+    public BasicResponse<String> deleteLike(@Valid @RequestBody EmotionRequest dto) {
+        Member member = emotionManageService.loadMember(dto.memberId());
+        CheckPage checkPage = emotionManageService.loadCheckPage(dto.checkPageId());
+        Confirm confirm = emotionManageService.loadConfirm(dto.confirmId());
+
+        likeService.cancelLike(member, checkPage, confirm);
+        return ResponseUtil.success("인정 취소에 성공하였습니다. Confirm id = " + dto.confirmId());
     }
 }
