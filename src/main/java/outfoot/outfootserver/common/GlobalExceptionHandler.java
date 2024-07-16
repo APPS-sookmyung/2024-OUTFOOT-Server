@@ -12,6 +12,7 @@ import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ErrorEntity;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
+import outfoot.outfootserver.member.exception.AuthException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,13 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public BasicResponse<ErrorEntity> authException(AuthException e) {
+        log.error("Auth Exception({})={}", e.getCode(), e.getMessage());
+        return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
