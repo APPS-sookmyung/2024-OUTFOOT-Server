@@ -1,12 +1,12 @@
-package outfoot.outfootserver.like.service;
+package outfoot.outfootserver.emotion.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
-import outfoot.outfootserver.like.domain.Like;
-import outfoot.outfootserver.like.repository.LikeRepository;
+import outfoot.outfootserver.emotion.domain.Like;
+import outfoot.outfootserver.emotion.repository.LikeRepository;
 import outfoot.outfootserver.member.domain.Member;
 
 @Service

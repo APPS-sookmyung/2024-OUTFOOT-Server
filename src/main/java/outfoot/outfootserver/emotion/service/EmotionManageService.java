@@ -1,4 +1,4 @@
-package outfoot.outfootserver.like.service;
+package outfoot.outfootserver.emotion.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import outfoot.outfootserver.member.service.MemberService;
 
 @Service
 @RequiredArgsConstructor
-public class LikeManageService {
+public class EmotionManageService {
 
     private final CheckPageService checkPageService;
     private final ConfirmService confirmService;

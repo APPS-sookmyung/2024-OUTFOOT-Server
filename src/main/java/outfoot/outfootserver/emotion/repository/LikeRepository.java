@@ -1,7 +1,7 @@
-package outfoot.outfootserver.like.repository;
+package outfoot.outfootserver.emotion.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import outfoot.outfootserver.like.domain.Like;
+import outfoot.outfootserver.emotion.domain.Like;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 }

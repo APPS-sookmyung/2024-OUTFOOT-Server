@@ -1,4 +1,4 @@
-package outfoot.outfootserver.like.domain;
+package outfoot.outfootserver.emotion.domain;
 
 
 import jakarta.persistence.*;
