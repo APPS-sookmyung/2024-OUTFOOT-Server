@@ -8,6 +8,7 @@ import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.emotion.domain.Like;
 import outfoot.outfootserver.emotion.exception.EmotionErrorCode;
 import outfoot.outfootserver.emotion.exception.EmotionException;
+import outfoot.outfootserver.emotion.repository.DislikeRepository;
 import outfoot.outfootserver.emotion.repository.LikeRepository;
 import outfoot.outfootserver.member.domain.Member;
 
@@ -16,12 +17,18 @@ import outfoot.outfootserver.member.domain.Member;
 @Transactional(readOnly = true)
 public class LikeService {
     private final LikeRepository likeRepository;
+    private final DislikeRepository dislikeRepository;
 
     @Transactional
     public void addLike(Member member, CheckPage checkPage, Confirm confirm) {
         likeRepository.findByLike(member, checkPage, confirm)
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.LIKE_ALREADY_PRESSED);
+                });
+
+        dislikeRepository.findByDislike(member, checkPage, confirm)
+                .ifPresent(e -> {
+                    throw new EmotionException(EmotionErrorCode.DUPLICATED_EMOTION);
                 });
 
         Like like = Like.builder()
