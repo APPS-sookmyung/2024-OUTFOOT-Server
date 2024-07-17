@@ -9,6 +9,9 @@ import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import outfoot.outfootserver.common.BaseTimeEntity;
+import outfoot.outfootserver.friend.domain.Friend;
+
+import java.util.List;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -52,9 +55,14 @@ public class Member extends BaseTimeEntity {
 
     private String myIntro;
 
+    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
+    private List<Friend> fromMember;
+
+    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
+    private List<Friend> toMember;
 
     @Builder
-    public Member(UUID userId, String username, String nickname, String email, String password, String provider, String providerId) {
+    public Member(UUID userId, String username, String nickname, String email, String password, String provider, String providerId, String code) {
         this.userId = userId;
         this.username = username;
         this.nickname = nickname;
@@ -62,5 +70,6 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.provider = provider;
         this.providerId = providerId;
+        this.code = code;
     }
 }
