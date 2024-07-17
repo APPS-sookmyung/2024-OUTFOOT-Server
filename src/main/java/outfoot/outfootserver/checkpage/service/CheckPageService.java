@@ -27,7 +27,7 @@ public class CheckPageService {
 
     @Transactional
 //    public Long saveCheckPage (Member member, CheckPageRequest dto) {
-    public Long saveCheckPage (CheckPageRequest dto) {
+    public CheckPageResponse saveCheckPage (CheckPageRequest dto) {
         checkPageRepository.findByTitle(dto.title()).ifPresent(e -> {
             throw new CheckPageException(CheckPageErrorCode.CHECKPAGE_DUPLICATION);
         });
@@ -39,7 +39,8 @@ public class CheckPageService {
 //        CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(member, dto));
         CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName()));
 
-        return checkPage.getId();
+        return CheckPageResponse.toCheckPage(checkPage);
+
     }
 
     public List<CheckPageListResponse> findAllCheckPage() {

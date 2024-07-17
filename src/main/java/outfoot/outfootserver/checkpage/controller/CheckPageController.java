@@ -29,11 +29,11 @@ public class CheckPageController {
         @Parameter(name = "animalId", description = "도장 메이트, 공백 X", example = "1")
     })
 //    public BasicResponse<String> saveCheckPage(@Valid @RequestBody CheckPageRequest dto, String memberId) {
-    public BasicResponse<String> saveCheckPage(@Valid @RequestBody CheckPageRequest dto) {
+    public BasicResponse<CheckPageResponse> saveCheckPage(@Valid @RequestBody CheckPageRequest dto) {
         // member 연동이 안 되어 있어 우선 member 없이 checkpage 생성 구현
 //        checkPageService.saveCheckPage(member, dto);
-        Long checkPageId = checkPageService.saveCheckPage(dto);
-        return ResponseUtil.success("목표 생성에 성공하였습니다. checkPageId = " + checkPageId);
+        CheckPageResponse checkPage = checkPageService.saveCheckPage(dto);
+        return ResponseUtil.success(checkPage);
     }
 
     @GetMapping

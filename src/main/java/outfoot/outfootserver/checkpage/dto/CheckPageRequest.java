@@ -1,9 +1,11 @@
 package outfoot.outfootserver.checkpage.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.member.domain.Member;
 
+@Builder
 public record CheckPageRequest(@NotBlank String title, String intro, @NotBlank String animalId) {
 
 //    public static CheckPage toCheckPage(Member member, CheckPageRequest dto) {
