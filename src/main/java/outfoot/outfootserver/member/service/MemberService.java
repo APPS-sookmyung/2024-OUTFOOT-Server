@@ -3,7 +3,6 @@ package outfoot.outfootserver.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
@@ -50,5 +49,11 @@ public class MemberService {
             sb.append(String.format("%02x", hashBytes[j]));
         }
         return sb.toString();
+    }
+
+    // TODO: 로그인 기능 구현 시 리턴 값 수정 필요
+    public Member loadMember(Long member_id) {
+        return memberRepository.findById(member_id)
+                .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
     }
 }
