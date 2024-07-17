@@ -29,13 +29,15 @@ public class Member extends BaseTimeEntity {
     @NotNull @Column(unique = true)
     private String username;
 
-    @NotNull @Column(unique = true)
+    //@NotNull
+    @Column(unique = true)
     private String nickname;
 
-    @NotNull @Column(unique = true)
+    //@NotNull
+    @Column(unique = true)
     private String email;
 
-    @NotNull
+    // @NotNull
     private String password;
 
     @Column(name = "provider", nullable = false, length = 10)
@@ -49,17 +51,6 @@ public class Member extends BaseTimeEntity {
     private String code;
 
     private String myIntro;
-/*
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, length = 20)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", length = 20)
-    private LocalDateTime updatedAt;
-
-
- */
 
 
     @Builder
