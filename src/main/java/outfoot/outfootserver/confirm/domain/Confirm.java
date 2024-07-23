@@ -5,7 +5,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.common.BaseTimeEntity;
+
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,8 +22,20 @@ public class Confirm extends BaseTimeEntity {
 
     private String memo;
 
+    private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "check_page_id") //id
+    private CheckPage checkPage; //객체
+
     @Builder
-    public Confirm(String memo) {
+    public Confirm(String memo, Date date, CheckPage checkPage) {
+        this.memo = memo;
+        this.date = date;
+        this.checkPage = checkPage;
+    }
+
+    public void updateMemo(String memo) {
         this.memo = memo;
     }
 }
