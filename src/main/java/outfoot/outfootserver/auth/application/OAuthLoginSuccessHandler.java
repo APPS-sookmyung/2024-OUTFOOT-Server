@@ -20,6 +20,8 @@ import outfoot.outfootserver.token.domain.RefreshToken;
 import outfoot.outfootserver.token.repository.RefreshTokenRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,24 +49,28 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         OAuth2AuthenticationToken token = (OAuth2AuthenticationToken)  authentication;
         final String provider = token.getAuthorizedClientRegistrationId();
 
+
         switch (provider){
-            case "kakao" -> {
+            case "kakao":
                 log.info("카카오 로그인 요청");
                 oAuth2UserInfo = new KakaoUserInfo(token.getPrincipal().getAttributes());
-            }
-            case "naver" -> {
+                break;
+
+            case "naver":
                 log.info("네이버 로그인 요청");
                 oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) token.getPrincipal().getAttributes().get("response"));
-            }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unsupported provider: " + provider);
         }
         
         String providerId = oAuth2UserInfo.getProviderId();
         String name = oAuth2UserInfo.getName();
+
+        Member member = memberRepository.findByProviderId((providerId));
         
-        Member existMember = memberRepository.findByProviderId(providerId);
-        Member member;
-        
-        if(existMember == null){ // 신규 유저인 경우
+        if(member == null){ // 신규 유저인 경우
             log.info("신규 유저입니다. 등록을 진행합니다.");
             
             member = Member.builder()
@@ -77,8 +83,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         }
         else {
             log.info("기존 유저입니다.");
-            refreshTokenRepository.deleteByUserId(existMember.getUserId());
-            member = existMember;
+            refreshTokenRepository.deleteByUserId(member.getUserId());
         }
 
         log.info("유저 이름 : {}", name);
@@ -90,13 +95,12 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         RefreshToken newRefreshToken = RefreshToken.builder()
                 .userId(member.getUserId())
                 .token(refreshToken)
-                .token(refreshToken)
                 .build();
         refreshTokenRepository.save(newRefreshToken);
 
         String accessToken = jwtService.generateAccessToken(member.getUserId(), ACCESS_TOKEN_EXPIRATION_TIME);
 
-        String encodedName = UriEncoder.encode(name);
+        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
         String redirectUri = String.format(REDIRECT_URI, encodedName, accessToken, refreshToken);
         getRedirectStrategy().sendRedirect(request, response, redirectUri);
 
