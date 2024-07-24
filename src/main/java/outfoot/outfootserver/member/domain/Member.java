@@ -29,7 +29,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "users_uuid", columnDefinition = "BINARY(16)", unique = true)
     private UUID userId;
 
-    @NotNull @Column(unique = true)
+    @NotNull @Column//(unique = true)
     private String username;
 
     //@NotNull
