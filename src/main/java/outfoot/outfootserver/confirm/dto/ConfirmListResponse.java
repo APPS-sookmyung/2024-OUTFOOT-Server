@@ -6,14 +6,13 @@ import outfoot.outfootserver.confirm.domain.Confirm;
 import java.util.Date;
 
 @Builder
-public record ConfirmResponse(String memo, Date date, int order, Long checkPageId) {
+public record ConfirmListResponse(String memo, Date date, int order) {
 
-    public static ConfirmResponse toConfirm(Confirm confirm){
-        return ConfirmResponse.builder()
+    public static ConfirmListResponse toConfirmList(Confirm confirm) {
+        return ConfirmListResponse.builder()
                 .memo(confirm.getMemo())
                 .date(confirm.getDate())
                 .order(confirm.getOrder())
-                .checkPageId(confirm.getCheckPage().getId())
                 .build();
     }
 }

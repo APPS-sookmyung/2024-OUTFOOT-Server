@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
+import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.confirm.domain.Confirm;
+import outfoot.outfootserver.confirm.dto.ConfirmListResponse;
 import outfoot.outfootserver.confirm.dto.ConfirmRequest;
 import outfoot.outfootserver.confirm.dto.ConfirmResponse;
 import outfoot.outfootserver.confirm.exception.ConfirmErrorCode;
@@ -17,6 +19,8 @@ import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +33,19 @@ public class ConfirmService {
     @Transactional
     public ConfirmResponse saveConfirm(ConfirmRequest dto) {
         CheckPage checkPage = checkPageRepository.findById(dto.checkPageId())
-                .orElseThrow(()->new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
+                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
 
-        Confirm confirm = confirmRepository.save(ConfirmRequest.toConfirm(dto, checkPage));
+        List<Confirm> confirmList = confirmRepository.findByCheckPageId(dto.checkPageId());
 
-        return ConfirmResponse.toConfirm(confirm);
+        int order = confirmList.size() + 1;
+        if(order >= 30){
+            throw new ConfirmException(ConfirmErrorCode.CONFIRM_LIMIT_EXCEEDED);
+        }
+
+        Confirm confirm = dto.toConfirm(dto, order, checkPage);
+        Confirm saveConfirm = confirmRepository.save(confirm);
+
+        return ConfirmResponse.toConfirm(saveConfirm);
     }
 
     @Transactional
@@ -45,14 +57,23 @@ public class ConfirmService {
     }
 
     @Transactional
-    public void deleteConfirm(Long confirm_id) {
-        Confirm confirm = findById(confirm_id);
+    public void deleteConfirm(Long checkPageId, int order) {
+        Confirm confirm = confirmRepository.findByCheckPageIdAndOrder(checkPageId, order)
+                .orElseThrow(()-> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
         confirmRepository.delete(confirm);
     }
 
-    public ConfirmResponse findConfirm(Long confirmId){
-        Confirm confirm = findById(confirmId);
+    public ConfirmResponse findConfirm(Long checkPageId, int order){
+        Confirm confirm = confirmRepository.findByCheckPageIdAndOrder(checkPageId, order)
+                .orElseThrow(()-> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
         return ConfirmResponse.toConfirm(confirm);
+    }
+
+    public List<ConfirmListResponse> findAllConfirm(){
+        List<Confirm> confirmList = confirmRepository.findAll();
+        return confirmList.stream()
+                .map(ConfirmListResponse::toConfirmList)
+                .toList();
     }
 
     public Confirm findById (Long confirm_id) {

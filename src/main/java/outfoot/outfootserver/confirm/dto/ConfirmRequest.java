@@ -7,10 +7,11 @@ import java.util.Date;
 
 public record ConfirmRequest(String memo, Date date, Long checkPageId) {
 
-    public static Confirm toConfirm(ConfirmRequest dto, CheckPage checkPage){
+    public static Confirm toConfirm(ConfirmRequest dto, int order, CheckPage checkPage){
         return Confirm.builder()
                 .memo(dto.memo())
                 .date(dto.date())
+                .order(order)
                 .checkPage(checkPage)
                 .build();
     }

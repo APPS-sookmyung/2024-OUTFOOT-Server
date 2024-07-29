@@ -24,14 +24,17 @@ public class Confirm extends BaseTimeEntity {
 
     private Date date;
 
+    private int order;
+
     @ManyToOne
     @JoinColumn(name = "check_page_id") //id
     private CheckPage checkPage; //객체
 
     @Builder
-    public Confirm(String memo, Date date, CheckPage checkPage) {
+    public Confirm(String memo, Date date, int order, CheckPage checkPage) {
         this.memo = memo;
         this.date = date;
+        this.order = order;
         this.checkPage = checkPage;
     }
 
