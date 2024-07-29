@@ -26,7 +26,7 @@ public class Confirm extends BaseTimeEntity {
 
     private int order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "check_page_id") //id
     private CheckPage checkPage; //객체
 

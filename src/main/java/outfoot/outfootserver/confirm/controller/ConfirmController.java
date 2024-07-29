@@ -20,8 +20,8 @@ public class ConfirmController {
     private final ConfirmService confirmService;
 
     @PostMapping
-    public BasicResponse<ConfirmResponse> save(@Valid @RequestBody ConfirmRequest dto) {
-        ConfirmResponse confirm = confirmService.saveConfirm(dto);
+    public BasicResponse<ConfirmResponse> saveConfirm(@PathVariable(name = "check_page_id") Long checkPageId, @Valid @RequestBody ConfirmRequest dto) {
+        ConfirmResponse confirm = confirmService.saveConfirm(checkPageId, dto);
         return ResponseUtil.success(confirm);
     }
 

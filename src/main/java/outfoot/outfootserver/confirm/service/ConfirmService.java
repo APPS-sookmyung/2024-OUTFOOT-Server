@@ -31,11 +31,11 @@ public class ConfirmService {
     private final CheckPageRepository checkPageRepository;
 
     @Transactional
-    public ConfirmResponse saveConfirm(ConfirmRequest dto) {
-        CheckPage checkPage = checkPageRepository.findById(dto.checkPageId())
+    public ConfirmResponse saveConfirm(Long checkPageId, ConfirmRequest dto) {
+        CheckPage checkPage = checkPageRepository.findById(checkPageId)
                 .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
 
-        List<Confirm> confirmList = confirmRepository.findByCheckPageId(dto.checkPageId());
+        List<Confirm> confirmList = confirmRepository.findByCheckPageId(checkPageId);
 
         int order = confirmList.size() + 1;
         if(order >= 30){
