@@ -10,7 +10,7 @@ import outfoot.outfootserver.emotion.service.LikeService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/confirm/like")
+@RequestMapping("/like")
 public class LikeController {
     private final LikeService likeService;
     private final EmotionManageService emotionManageService;

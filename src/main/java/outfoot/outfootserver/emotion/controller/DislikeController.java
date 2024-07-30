@@ -10,7 +10,7 @@ import outfoot.outfootserver.emotion.service.EmotionManageService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/confirm/dislike")
+@RequestMapping("/dislike")
 public class DislikeController {
 
     private final DislikeService dislikeService;
