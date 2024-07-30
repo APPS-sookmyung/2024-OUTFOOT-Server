@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
+import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.dto.MemberResponse;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.service.MemberService;
 
@@ -27,10 +29,11 @@ public class MemberController {
             @Parameter(name = "nickname", description = "닉네임", example = "ajeong"),
             @Parameter(name = "password", description = "공백 X", example = "password123"),
             @Parameter(name = "email", description = "공백 X", example = "ajung7038@naver.com"),
+            @Parameter(name = "code", description = "공백 X", example = "ABC98273"),
     })
-    public BasicResponse<String> SignUp (@Valid@RequestBody SignUpRequest dto) {
-        long memberId = memberService.save(dto);
-        return ResponseUtil.success("가입 성공 " + memberId);
+    public BasicResponse<MemberResponse> SignUp (@Valid@RequestBody SignUpRequest dto) {
+        MemberResponse member = memberService.save(dto);
+        return ResponseUtil.success(member);
     }
 
     private final MemberService memberService;
