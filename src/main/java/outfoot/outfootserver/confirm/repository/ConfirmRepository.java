@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface ConfirmRepository extends JpaRepository<Confirm, Long> {
     List<Confirm> findByCheckPageId(Long checkPageId);
 
-    Optional<Confirm> findByCheckPageIdAndOrder(Long checkPageId, int order);
+    Optional<Confirm> findByCheckPageIdAndOrder(Long checkPageId, Long order);
 }

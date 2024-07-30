@@ -27,21 +27,22 @@ public class ConfirmController {
 
     @DeleteMapping("/{order}")
     public BasicResponse<String> deleteConfirm(@PathVariable(name = "check_page_id") Long checkPageId,
-                                               @PathVariable(name = "order") int order){
+                                               @PathVariable(name = "order") Long order){
         confirmService.deleteConfirm(checkPageId, order);
         return ResponseUtil.success("인증판 삭제 성공");
     }
 
-    @PutMapping("/{confirm_id}")
-    public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "confirm_id") Long confirmId,
+    @PutMapping("/{order}")
+    public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "check_page_id") Long checkPageId,
+                                                     @PathVariable(name = "order") Long order,
                                                      @RequestBody String memo){
-        ConfirmResponse confirm = confirmService.updateMemo(confirmId, memo);
+        ConfirmResponse confirm = confirmService.updateMemo(checkPageId, order, memo);
         return ResponseUtil.success(confirm);
     }
 
     @GetMapping("/{order}")
     public BasicResponse<ConfirmResponse> findConfirm(@PathVariable(name = "check_page_id") Long checkPageId,
-                                                      @PathVariable(name = "order") int order){
+                                                      @PathVariable(name = "order") Long order){
         ConfirmResponse confirm = confirmService.findConfirm(checkPageId, order);
         return ResponseUtil.success(confirm);
     }

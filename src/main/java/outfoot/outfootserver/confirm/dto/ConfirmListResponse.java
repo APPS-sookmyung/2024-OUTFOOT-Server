@@ -6,7 +6,7 @@ import outfoot.outfootserver.confirm.domain.Confirm;
 import java.util.Date;
 
 @Builder
-public record ConfirmListResponse(String memo,  int order) {
+public record ConfirmListResponse(String memo,  Long order) {
 
     public static ConfirmListResponse toConfirmList(Confirm confirm) {
         return ConfirmListResponse.builder()

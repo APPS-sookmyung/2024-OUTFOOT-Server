@@ -37,7 +37,7 @@ public class ConfirmService {
 
         List<Confirm> confirmList = confirmRepository.findByCheckPageId(checkPageId);
 
-        int order = confirmList.size() + 1;
+        long order = confirmList.size() + 1;
         if(order >= 30){
             throw new ConfirmException(ConfirmErrorCode.CONFIRM_LIMIT_EXCEEDED);
         }
@@ -49,23 +49,21 @@ public class ConfirmService {
     }
 
     @Transactional
-    public ConfirmResponse updateMemo(Long confirmId, String memo) {
-        Confirm confirm = findById(confirmId);
+    public ConfirmResponse updateMemo(Long checkPageId, Long order, String memo) {
+        Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
         confirm.updateMemo(memo);
         Confirm updatedConfirm = confirmRepository.save(confirm);
         return ConfirmResponse.toConfirm(updatedConfirm);
     }
 
     @Transactional
-    public void deleteConfirm(Long checkPageId, int order) {
-        Confirm confirm = confirmRepository.findByCheckPageIdAndOrder(checkPageId, order)
-                .orElseThrow(()-> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
+    public void deleteConfirm(Long checkPageId, Long order) {
+        Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
         confirmRepository.delete(confirm);
     }
 
-    public ConfirmResponse findConfirm(Long checkPageId, int order){
-        Confirm confirm = confirmRepository.findByCheckPageIdAndOrder(checkPageId, order)
-                .orElseThrow(()-> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
+    public ConfirmResponse findConfirm(Long checkPageId, Long order){
+        Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
         return ConfirmResponse.toConfirm(confirm);
     }
 
@@ -76,8 +74,13 @@ public class ConfirmService {
                 .toList();
     }
 
-    public Confirm findById (Long confirm_id) {
-        return confirmRepository.findById(confirm_id)
+    public Confirm findByCheckPageIdAndOrder (Long checkPageId, Long order) {
+        return confirmRepository.findByCheckPageIdAndOrder(checkPageId, order)
+                .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
+    }
+
+    public Confirm findById (Long confirmId) {
+        return confirmRepository.findById(confirmId)
                 .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
     }
 }
