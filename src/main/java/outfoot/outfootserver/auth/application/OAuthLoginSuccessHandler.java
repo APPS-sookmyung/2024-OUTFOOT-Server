@@ -74,8 +74,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             log.info("신규 유저입니다. 등록을 진행합니다.");
             
             member = Member.builder()
-                    .userId(UUID.randomUUID())
-                    .username(name)
+                    .username(UUID.randomUUID())
+                    .nickname(name)
                     .provider(provider)
                     .providerId(providerId)
                     .build();
@@ -83,22 +83,22 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         }
         else {
             log.info("기존 유저입니다.");
-            refreshTokenRepository.deleteByUserId(member.getUserId());
+            refreshTokenRepository.deleteByUserId(member.getUsername());
         }
 
         log.info("유저 이름 : {}", name);
         log.info("provider : {}", provider);
         log.info("provider_id : {}", providerId);
 
-        String refreshToken = jwtService.generateRefreshToken(member.getUserId(), REFRESH_TOKEN_EXPIRATION_TIME);
+        String refreshToken = jwtService.generateRefreshToken(member.getUsername(), REFRESH_TOKEN_EXPIRATION_TIME);
 
         RefreshToken newRefreshToken = RefreshToken.builder()
-                .userId(member.getUserId())
+                .userId(member.getUsername())
                 .token(refreshToken)
                 .build();
         refreshTokenRepository.save(newRefreshToken);
 
-        String accessToken = jwtService.generateAccessToken(member.getUserId(), ACCESS_TOKEN_EXPIRATION_TIME);
+        String accessToken = jwtService.generateAccessToken(member.getUsername(), ACCESS_TOKEN_EXPIRATION_TIME);
 
         String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
         String redirectUri = String.format(REDIRECT_URI, encodedName, accessToken, refreshToken);

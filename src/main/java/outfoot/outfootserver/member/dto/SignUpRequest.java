@@ -8,27 +8,22 @@ import lombok.NoArgsConstructor;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.service.MemberService;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignUpRequest {
 
     @NotBlank
-    private String username;
+    private UUID username;
 
     private String nickname;
 
-    @NotBlank
-    private String password;
-
-    @NotBlank @Email
-    private String email;
 
     public static Member toMember(SignUpRequest dto, String friendCode) {
         return Member.builder()
                 .username(dto.username)
-                .password(dto.password)
                 .nickname(dto.nickname)
-                .email(dto.email)
                 .code(friendCode)
                 .build();
     }
