@@ -19,10 +19,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/")
 @RequiredArgsConstructor
 @Tag(name = "회원가입", description = "Member API")
 public class MemberController {
+
     @PostMapping("/signup")
     @Parameters({
             @Parameter(name = "username", description = "공백 X", example = "ajeong7038"),

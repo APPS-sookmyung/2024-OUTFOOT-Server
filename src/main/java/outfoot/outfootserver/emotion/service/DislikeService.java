@@ -7,7 +7,6 @@ import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.domain.Dislike;
-import outfoot.outfootserver.emotion.dto.EmotionRequest;
 import outfoot.outfootserver.emotion.exception.EmotionErrorCode;
 import outfoot.outfootserver.emotion.exception.EmotionException;
 import outfoot.outfootserver.emotion.repository.DislikeRepository;
@@ -24,21 +23,20 @@ public class DislikeService {
     private final ConfirmRepository confirmRepository;
 
     @Transactional
-    public void addDislike(EmotionRequest dto) {
-        dislikeRepository.findByDislike(dto.member(), dto.checkPage(), dto.confirm())
+    public void addDislike(Member member, Confirm confirm) {
+        dislikeRepository.findByDislike(member, confirm)
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.DISLIKE_ALREADY_PRESSED);
                         });
 
-        likeRepository.findByLike(dto.member(), dto.checkPage(), dto.confirm())
+        likeRepository.findByLike(member, confirm)
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.DUPLICATED_EMOTION);
                 });
 
         Dislike dislike = Dislike.builder()
-                .member(dto.member())
-                .checkPage(dto.checkPage())
-                .confirm(dto.confirm())
+                .member(member)
+                .confirm(confirm)
                 .build();
 
         dislikeRepository.save(dislike);
