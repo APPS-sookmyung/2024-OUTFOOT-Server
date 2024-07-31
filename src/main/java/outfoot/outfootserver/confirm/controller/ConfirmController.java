@@ -10,6 +10,7 @@ import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.dto.ConfirmListResponse;
 import outfoot.outfootserver.confirm.dto.ConfirmRequest;
 import outfoot.outfootserver.confirm.dto.ConfirmResponse;
+import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
 import outfoot.outfootserver.confirm.service.ConfirmService;
 
 import java.util.List;
@@ -52,8 +53,8 @@ public class ConfirmController {
     @PutMapping("/{order}")
     public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "check_page_id") Long checkPageId,
                                                      @PathVariable(name = "order") Long order,
-                                                     @RequestBody String memo){
-        ConfirmResponse confirm = confirmService.updateMemo(checkPageId, order, memo);
+                                                     @RequestBody UpdateConfirmRequest dto){
+        ConfirmResponse confirm = confirmService.updateMemo(checkPageId, order, dto.memo());
         return ResponseUtil.success(confirm);
     }
 
