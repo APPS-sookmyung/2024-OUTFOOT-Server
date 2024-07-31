@@ -44,6 +44,7 @@ public class DislikeService {
     }
 
     @Transactional
+
     public void cancelDislike(Member member, Confirm confirm) {
         dislikeRepository.findByDislike(member, confirm)
                 .ifPresentOrElse(dislike -> {
@@ -51,7 +52,9 @@ public class DislikeService {
 
                     confirm.getDislikes().remove(dislike);
                     confirmRepository.save(confirm);
+
                 }, () -> {});
+
     }
 
 }
