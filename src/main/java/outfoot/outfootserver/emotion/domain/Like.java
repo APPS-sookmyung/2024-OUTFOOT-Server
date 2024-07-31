@@ -25,18 +25,13 @@ public class Like extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "check_page_id", nullable = false)
-    private CheckPage checkPage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "confirm_id", nullable = false)
     private Confirm confirm;
 
 
     @Builder
-    public Like(Member member, CheckPage checkPage, Confirm confirm) {
+    public Like(Member member, Confirm confirm) {
         this.member = member;
-        this.checkPage = checkPage;
         this.confirm = confirm;
     }
 }
