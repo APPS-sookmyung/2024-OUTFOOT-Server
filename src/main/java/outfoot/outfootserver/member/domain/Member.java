@@ -6,10 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.friend.domain.Friend;
 
 import java.util.List;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity @Getter
 @Table(name = "member")
@@ -21,17 +26,28 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull @Column(unique = true)
+    @Column(name = "users_uuid", columnDefinition = "BINARY(16)", unique = true)
+    private UUID userId;
+
+    @NotNull @Column//(unique = true)
     private String username;
 
-    @NotNull @Column(unique = true)
+    //@NotNull
+    @Column(unique = true)
     private String nickname;
 
-    @NotNull @Column(unique = true)
+    //@NotNull
+    @Column(unique = true)
     private String email;
 
-    @NotNull
+    // @NotNull
     private String password;
+
+    @Column(name = "provider", nullable = false, length = 10)
+    private String provider;
+
+    @Column(name = "provider_id", nullable = false, length = 50)
+    private String providerId;
 
 //    @NotNull
     @Column(unique = true)
@@ -46,11 +62,14 @@ public class Member extends BaseTimeEntity {
     private List<Friend> toMember;
 
     @Builder
-    public Member(String username, String nickname, String email, String password, String code) {
+    public Member(UUID userId, String username, String nickname, String email, String password, String provider, String providerId, String code) {
+        this.userId = userId;
         this.username = username;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.provider = provider;
+        this.providerId = providerId;
         this.code = code;
     }
 }
