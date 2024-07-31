@@ -7,6 +7,7 @@ import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.domain.Like;
+import outfoot.outfootserver.emotion.dto.EmotionRequest;
 import outfoot.outfootserver.emotion.exception.EmotionErrorCode;
 import outfoot.outfootserver.emotion.exception.EmotionException;
 import outfoot.outfootserver.emotion.repository.DislikeRepository;
@@ -22,21 +23,21 @@ public class LikeService {
     private final ConfirmRepository confirmRepository;
 
     @Transactional
-    public void addLike(Member member, CheckPage checkPage, Confirm confirm) {
-        likeRepository.findByLike(member, checkPage, confirm)
+    public void addLike(EmotionRequest dto) {
+        likeRepository.findByLike(dto.member(), dto.checkPage(), dto.confirm())
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.LIKE_ALREADY_PRESSED);
                 });
 
-        dislikeRepository.findByDislike(member, checkPage, confirm)
+        dislikeRepository.findByDislike(dto.member(), dto.checkPage(), dto.confirm())
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.DUPLICATED_EMOTION);
                 });
 
         Like like = Like.builder()
-                .member(member)
-                .checkPage(checkPage)
-                .confirm(confirm)
+                .member(dto.member())
+                .checkPage(dto.checkPage())
+                .confirm(dto.confirm())
                 .build();
 
         likeRepository.save(like);
@@ -46,14 +47,13 @@ public class LikeService {
     }
 
     @Transactional
+
     public void cancelLike(Member member, CheckPage checkPage, Confirm confirm) {
         likeRepository.findByLike(member, checkPage, confirm)
                 .ifPresentOrElse(like -> {
                     likeRepository.delete(like);
                     confirm.getLikes().remove(like);
                     confirmRepository.save(confirm);
-                }, () -> {
-                    throw new EmotionException(EmotionErrorCode.LIKE_NOT_PRESSED);
-                });
+                }, () -> {});
     }
 }

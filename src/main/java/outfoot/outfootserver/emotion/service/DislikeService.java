@@ -7,6 +7,7 @@ import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.domain.Dislike;
+import outfoot.outfootserver.emotion.dto.EmotionRequest;
 import outfoot.outfootserver.emotion.exception.EmotionErrorCode;
 import outfoot.outfootserver.emotion.exception.EmotionException;
 import outfoot.outfootserver.emotion.repository.DislikeRepository;
@@ -23,21 +24,21 @@ public class DislikeService {
     private final ConfirmRepository confirmRepository;
 
     @Transactional
-    public void addDislike(Member member, CheckPage checkPage, Confirm confirm) {
-        dislikeRepository.findByDislike(member, checkPage, confirm)
+    public void addDislike(EmotionRequest dto) {
+        dislikeRepository.findByDislike(dto.member(), dto.checkPage(), dto.confirm())
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.DISLIKE_ALREADY_PRESSED);
                         });
 
-        likeRepository.findByLike(member, checkPage, confirm)
+        likeRepository.findByLike(dto.member(), dto.checkPage(), dto.confirm())
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.DUPLICATED_EMOTION);
                 });
 
         Dislike dislike = Dislike.builder()
-                .member(member)
-                .checkPage(checkPage)
-                .confirm(confirm)
+                .member(dto.member())
+                .checkPage(dto.checkPage())
+                .confirm(dto.confirm())
                 .build();
 
         dislikeRepository.save(dislike);
@@ -53,8 +54,7 @@ public class DislikeService {
 
                     confirm.getDislikes().remove(dislike);
                     confirmRepository.save(confirm);
-                } , () -> {
-                    throw new EmotionException(EmotionErrorCode.DISLIKE_NOT_PRESSED);
-                });
+                } , () -> {});
     }
+
 }
