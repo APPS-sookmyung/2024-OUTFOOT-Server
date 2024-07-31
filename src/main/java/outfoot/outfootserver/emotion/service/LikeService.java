@@ -45,7 +45,8 @@ public class LikeService {
 
     @Transactional
     public void cancelLike(Member member, Confirm confirm) {
-        likeRepository.findByLike(member,  confirm)
+        likeRepository.findByLike(member, confirm)
+
                 .ifPresentOrElse(like -> {
                     likeRepository.delete(like);
                     confirm.getLikes().remove(like);
