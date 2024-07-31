@@ -10,7 +10,6 @@ import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.service.ConfirmService;
-import outfoot.outfootserver.emotion.service.EmotionManageService;
 import outfoot.outfootserver.emotion.service.LikeService;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.service.MemberService;
@@ -22,7 +21,6 @@ import outfoot.outfootserver.member.service.MemberService;
 public class LikeController {
     private final LikeService likeService;
     private final MemberService memberService;
-    private final EmotionManageService emotionManageService;
     private final ConfirmService confirmService;
 
     @PostMapping
@@ -43,8 +41,8 @@ public class LikeController {
             @Parameter(name = "confirm_id", example = "1"),
     })
     public BasicResponse<String> deleteLike(@Valid @PathVariable(name = "member_id") Long memberId, @PathVariable(name = "confirm_id") Long confirmId) {
-        Member member = emotionManageService.loadMember(memberId);
-        Confirm confirm = emotionManageService.loadConfirm(confirmId);
+        Member member = memberService.loadMember(memberId);
+        Confirm confirm = confirmService.findById(confirmId);
 
         likeService.cancelLike(member, confirm);
         return ResponseUtil.success("인정 취소에 성공하였습니다. Confirm id = " + confirmId);
