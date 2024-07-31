@@ -23,7 +23,7 @@ public class CheckPage extends BaseTimeEntity {
 //    @JoinColumn(name = "member_id", nullable = false)
 //    private Member member;
 
-    @NotBlank @Column(unique = true)
+    @NotBlank
     private String title;
 
     private String intro;

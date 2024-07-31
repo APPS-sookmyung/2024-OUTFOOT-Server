@@ -8,21 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.MemberResponse;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.service.MemberService;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
-
 @RestController
-@RequestMapping("/")
 @RequiredArgsConstructor
 @Tag(name = "회원가입", description = "Member API")
 public class MemberController {
+
     @PostMapping("/signup")
     @Parameters({
             @Parameter(name = "username", description = "공백 X", example = "ajeong7038"),
@@ -31,7 +25,7 @@ public class MemberController {
             @Parameter(name = "email", description = "공백 X", example = "ajung7038@naver.com"),
             @Parameter(name = "code", description = "공백 X", example = "ABC98273"),
     })
-    public BasicResponse<MemberResponse> SignUp (@Valid@RequestBody SignUpRequest dto) {
+    public BasicResponse<MemberResponse> SignUp (@Valid @RequestBody SignUpRequest dto) {
         MemberResponse member = memberService.save(dto);
         return ResponseUtil.success(member);
     }
