@@ -12,6 +12,6 @@ import java.util.Optional;
 
 public interface DislikeRepository extends JpaRepository<Dislike, Long> {
 
-    @Query("select d from Dislike d where d.member = :member and d.checkPage = :checkPage and d.confirm = :confirm")
-    Optional<Dislike> findByDislike(@Param("member") Member member, @Param("checkPage") CheckPage checkPage, @Param("confirm") Confirm confirm);
+    @Query("select d from Dislike d where d.member = :member and d.confirm = :confirm")
+    Optional<Dislike> findByDislike(@Param("member") Member member, @Param("confirm") Confirm confirm);
 }

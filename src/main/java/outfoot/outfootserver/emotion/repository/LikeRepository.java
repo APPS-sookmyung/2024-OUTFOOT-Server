@@ -12,6 +12,6 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    @Query("select l from Like l where l.member = :member and l.checkPage = :checkPage and l.confirm = :confirm")
-    Optional<Like> findByLike(@Param("member") Member member, @Param("checkPage")CheckPage checkPage, @Param("confirm") Confirm confirm);
+    @Query("select l from Like l where l.member = :member and l.confirm = :confirm")
+    Optional<Like> findByLike(@Param("member") Member member, @Param("confirm") Confirm confirm);
 }

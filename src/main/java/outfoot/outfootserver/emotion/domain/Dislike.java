@@ -25,17 +25,12 @@ public class Dislike extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "check_page_id", nullable = false)
-    private CheckPage checkPage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "confirm_id", nullable = false)
     private Confirm confirm;
 
     @Builder
-    public Dislike(Member member, CheckPage checkPage, Confirm confirm) {
+    public Dislike(Member member, Confirm confirm) {
         this.member = member;
-        this.checkPage = checkPage;
         this.confirm = confirm;
     }
 }

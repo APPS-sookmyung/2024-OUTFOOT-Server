@@ -1,33 +1,40 @@
 package outfoot.outfootserver.emotion.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.emotion.dto.EmotionRequest;
+import outfoot.outfootserver.confirm.domain.Confirm;
+import outfoot.outfootserver.confirm.service.ConfirmService;
 import outfoot.outfootserver.emotion.service.EmotionManageService;
 import outfoot.outfootserver.emotion.service.LikeService;
+import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.service.MemberService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/like")
+@RequestMapping("/like/{member_id}/{confirm_id}")
 public class LikeController {
     private final LikeService likeService;
+    private final MemberService memberService;
     private final EmotionManageService emotionManageService;
+    private final ConfirmService confirmService;
 
-//    @PostMapping
-    @GetMapping("/{member_id}/{check_page_id}/{confirm_id}")
-    public BasicResponse<String> addLike(@PathVariable Long member_id, @PathVariable Long check_page_id, @PathVariable Long confirm_id) {
-        EmotionRequest dto = emotionManageService.loadLikeInfo(member_id, check_page_id, confirm_id);
-        likeService.addLike(dto);
-        return ResponseUtil.success("인정 추가에 성공하였습니다. Confirm id = " + confirm_id);
+    @PostMapping
+    public BasicResponse<String> addLike(@Valid @PathVariable(name = "member_id") Long memberId, @PathVariable(name = "confirm_id") Long confirmId) {
+        Member member = memberService.loadMember(memberId);
+        Confirm confirm = confirmService.findById(confirmId);
+        likeService.addLike(member, confirm);
+        return ResponseUtil.success("인정 추가에 성공하였습니다. Confirm id = " + confirmId);
     }
     
-    @DeleteMapping("/{member_id}/{check_page_id}/{confirm_id}")
-    public BasicResponse<String> deleteLike(@PathVariable Long member_id, @PathVariable Long check_page_id, @PathVariable Long confirm_id) {
-        EmotionRequest dto = emotionManageService.loadLikeInfo(member_id, check_page_id, confirm_id);
+    @DeleteMapping
+    public BasicResponse<String> deleteLike(@Valid @PathVariable(name = "member_id") Long memberId, @PathVariable(name = "confirm_id") Long confirmId) {
+        Member member = emotionManageService.loadMember(memberId);
+        Confirm confirm = emotionManageService.loadConfirm(confirmId);
 
-        likeService.cancelLike(dto);
-        return ResponseUtil.success("인정 취소에 성공하였습니다. Confirm id = " + confirm_id);
+        likeService.cancelLike(member, confirm);
+        return ResponseUtil.success("인정 취소에 성공하였습니다. Confirm id = " + confirmId);
     }
 }
