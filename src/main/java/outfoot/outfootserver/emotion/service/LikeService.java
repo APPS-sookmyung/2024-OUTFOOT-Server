@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
+import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.domain.Like;
 import outfoot.outfootserver.emotion.exception.EmotionErrorCode;
 import outfoot.outfootserver.emotion.exception.EmotionException;
@@ -18,6 +19,7 @@ import outfoot.outfootserver.member.domain.Member;
 public class LikeService {
     private final LikeRepository likeRepository;
     private final DislikeRepository dislikeRepository;
+    private final ConfirmRepository confirmRepository;
 
     @Transactional
     public void addLike(Member member, CheckPage checkPage, Confirm confirm) {
@@ -38,12 +40,19 @@ public class LikeService {
                 .build();
 
         likeRepository.save(like);
+
+        confirm.getLikes().add(like);
+        confirmRepository.save(confirm);
     }
 
     @Transactional
     public void cancelLike(Member member, CheckPage checkPage, Confirm confirm) {
         likeRepository.findByLike(member, checkPage, confirm)
-                .ifPresentOrElse(likeRepository::delete, () -> {
+                .ifPresentOrElse(like -> {
+                    likeRepository.delete(like);
+                    confirm.getLikes().remove(like);
+                    confirmRepository.save(confirm);
+                }, () -> {
                     throw new EmotionException(EmotionErrorCode.LIKE_NOT_PRESSED);
                 });
     }

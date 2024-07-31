@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
+import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.domain.Dislike;
 import outfoot.outfootserver.emotion.exception.EmotionErrorCode;
 import outfoot.outfootserver.emotion.exception.EmotionException;
@@ -19,6 +20,7 @@ public class DislikeService {
 
     private final DislikeRepository dislikeRepository;
     private final LikeRepository likeRepository;
+    private final ConfirmRepository confirmRepository;
 
     @Transactional
     public void addDislike(Member member, CheckPage checkPage, Confirm confirm) {
@@ -39,12 +41,19 @@ public class DislikeService {
                 .build();
 
         dislikeRepository.save(dislike);
+        confirm.getDislikes().add(dislike);
+        confirmRepository.save(confirm);
     }
 
     @Transactional
     public void cancelDislike(Member member, CheckPage checkPage, Confirm confirm) {
         dislikeRepository.findByDislike(member, checkPage, confirm)
-                .ifPresentOrElse(dislikeRepository::delete , () -> {
+                .ifPresentOrElse(dislike -> {
+                    dislikeRepository.delete(dislike);
+
+                    confirm.getDislikes().remove(dislike);
+                    confirmRepository.save(confirm);
+                } , () -> {
                     throw new EmotionException(EmotionErrorCode.DISLIKE_NOT_PRESSED);
                 });
     }

@@ -11,4 +11,7 @@ public interface ConfirmRepository extends JpaRepository<Confirm, Long> {
     List<Confirm> findByCheckPageId(Long checkPageId);
 
     Optional<Confirm> findByCheckPageIdAndOrder(Long checkPageId, Long order);
+
+    List<Confirm> findByCheckPageIdAndCreatedAtBetween(Long checkPageId, String start, String end);
+
 }
