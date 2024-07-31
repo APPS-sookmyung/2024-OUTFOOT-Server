@@ -6,6 +6,7 @@ import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.service.ConfirmService;
+import outfoot.outfootserver.emotion.dto.EmotionRequest;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.service.MemberService;
 
@@ -16,6 +17,14 @@ public class EmotionManageService {
     private final CheckPageService checkPageService;
     private final ConfirmService confirmService;
     private final MemberService memberService;
+
+    public EmotionRequest loadLikeInfo(Long memberId, Long checkPageId, Long confirmId) {
+        return EmotionRequest.builder()
+                .member(loadMember(memberId))
+                .checkPage(loadCheckPage(checkPageId))
+                .confirm(loadConfirm(confirmId))
+                .build();
+    }
 
     public Member loadMember (Long member_id) {
         return memberService.loadMember(member_id);
