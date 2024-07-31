@@ -3,7 +3,6 @@ package outfoot.outfootserver.emotion.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.domain.Dislike;
@@ -45,8 +44,8 @@ public class DislikeService {
     }
 
     @Transactional
-    public void cancelDislike(Member member, CheckPage checkPage, Confirm confirm) {
-        dislikeRepository.findByDislike(member, checkPage, confirm)
+    public void cancelDislike(Member member, Confirm confirm) {
+        dislikeRepository.findByDislike(member, confirm)
                 .ifPresentOrElse(dislike -> {
                     dislikeRepository.delete(dislike);
 
