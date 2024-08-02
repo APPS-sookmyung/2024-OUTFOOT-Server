@@ -1,5 +1,6 @@
 package outfoot.outfootserver.member.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class MemberController {
 
     @PostMapping("/signup")
+    @Operation(summary = "회원가입")
     @Parameters({
             @Parameter(name = "username", description = "공백 X", example = "ajeong7038"),
             @Parameter(name = "nickname", description = "닉네임", example = "ajeong"),
