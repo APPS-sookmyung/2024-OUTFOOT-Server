@@ -1,5 +1,6 @@
 package outfoot.outfootserver.friend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,7 @@ public class FriendController {
     private final FriendService friendService;
     private final MemberRepository memberRepository;
 
+    @Operation(summary = "친구 저장")
     @PostMapping("/{member_id}")
     @Parameters({
             @Parameter(name = "code", description = "친구 코드", example = "ABC")
@@ -45,8 +47,8 @@ public class FriendController {
 //        friendService.deleteFriend(friendId);
 //        return ResponseUtil.success("친구 삭제 성공");
 //    }
-
-//  친구 단일 조회(코드로 조회)
+    
+    @Operation(summary = "친구 조회")
     @GetMapping
     @Parameters({
             @Parameter(name = "code", description = "친구 코드", example = "ABC")
@@ -56,7 +58,7 @@ public class FriendController {
         return ResponseUtil.success("친구 검색 성공: "+ member.getId());
     }
 
-//  url로 입력한 member의 친구 목록 조회
+    @Operation(summary = "친구 전체 조회")
     @GetMapping("/{member_id}")
     public BasicResponse<List<FriendListResponse>> findAllFriend(@PathVariable(name = "member_id") Long memberId){
         List<FriendListResponse> friends = friendService.findAllFriend(memberId);

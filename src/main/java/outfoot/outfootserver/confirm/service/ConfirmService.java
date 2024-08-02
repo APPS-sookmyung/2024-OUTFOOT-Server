@@ -88,8 +88,7 @@ public class ConfirmService {
         long dislikeCount = confirm.getDisLikeCount();
         return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount);
     }
-
-
+    
     public Confirm findByCheckPageIdAndOrder (Long checkPageId, Long order) {
         return confirmRepository.findByCheckPageIdAndOrder(checkPageId, order)
                 .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
