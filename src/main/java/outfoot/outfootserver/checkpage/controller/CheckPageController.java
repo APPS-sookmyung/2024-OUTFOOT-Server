@@ -3,6 +3,8 @@ package outfoot.outfootserver.checkpage.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +26,11 @@ public class CheckPageController {
     private final CheckPageService checkPageService;
 
     @PostMapping
-    @Operation(summary = "인증판 생성")
-    @Parameters({
-            @Parameter(name = "title", description = "공백 X", example = "목표"),
-            @Parameter(name = "intro", description = "한 줄 소개", example = "한 줄 소개"),
-            @Parameter(name = "animalId", description = "도장 메이트, 공백 X", example = "1")
+    @Operation(summary = "도장판 생성")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "도장 메이트 번호를 찾을 수 없습니다."),
     })
-
 //    public BasicResponse<String> saveCheckPage(@Valid @RequestBody CheckPageRequest dto, String memberId) {
     public BasicResponse<CheckPageResponse> saveCheckPage(@Valid @RequestBody CheckPageRequest dto) {
         // member 연동이 안 되어 있어 우선 member 없이 checkpage 생성 구현
@@ -39,25 +39,37 @@ public class CheckPageController {
         return ResponseUtil.success(checkPage);
     }
 
+
     @GetMapping
-    @Operation(summary = "인증판 전체 조회")
+    @Operation(summary = "도장판 전체 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도장판 전체 조회에 성공하였습니다."),
+    })
     public BasicResponse<List<CheckPageListResponse>> findAllCheckPage() {
         return ResponseUtil.success(checkPageService.findAllCheckPage());
     }
 
     @GetMapping("/{check_page_id}/foot")
-    @Operation(summary = "인증판 단건 조회")
+    @Operation(summary = "도장판 단건 조회")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도장판 단건 조회에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
     })
             public BasicResponse<CheckPageResponse>findOne(@PathVariable(name = "check_page_id") Long checkPageId) {
         return ResponseUtil.success(checkPageService.findCheckPage(checkPageId));
     }
 
     @DeleteMapping("/{check_page_id}")
-    @Operation(summary = "인증판 삭제")
+    @Operation(summary = "도장판 삭제")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도장판 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
     })
     public BasicResponse<String> deleteCheckPage(@PathVariable(name = "check_page_id") Long checkPageId) {
         Long id = checkPageService.deleteCheckPage(checkPageId);
