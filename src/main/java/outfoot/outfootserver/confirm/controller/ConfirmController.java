@@ -24,7 +24,7 @@ public class ConfirmController {
     private final ConfirmService confirmService;
     
     @PostMapping
-    @Operation(summary = "인증판 저장")
+    @Operation(summary = "도장판 저장")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "memo", description = "사진 설명", example = "메모"),
@@ -35,7 +35,7 @@ public class ConfirmController {
         return ResponseUtil.success(confirm);
     }
 
-    @Operation(summary = "인증판 삭제")
+    @Operation(summary = "도장판 삭제")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
@@ -47,7 +47,7 @@ public class ConfirmController {
         return ResponseUtil.success("인증판 삭제 성공");
     }
 
-    @Operation(summary = "인증판 수정")
+    @Operation(summary = "도장판 수정")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
@@ -61,7 +61,7 @@ public class ConfirmController {
         return ResponseUtil.success(confirm);
     }
 
-    @Operation(summary = "인증판 조회")
+    @Operation(summary = "도장판 조회")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
