@@ -1,5 +1,6 @@
 package outfoot.outfootserver.emotion.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +25,7 @@ public class LikeController {
     private final ConfirmService confirmService;
 
     @PostMapping
+    @Operation(summary = "인정 추가")
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "confirm_id", example = "1"),
@@ -36,6 +38,7 @@ public class LikeController {
     }
     
     @DeleteMapping
+    @Operation(summary = "인정 삭제")
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "confirm_id", example = "1"),
