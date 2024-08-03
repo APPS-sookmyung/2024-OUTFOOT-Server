@@ -3,6 +3,8 @@ package outfoot.outfootserver.emotion.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,13 @@ public class DislikeController {
             @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "confirm_id", example = "1"),
     })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "부정 추가에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "400", description = "부정 버튼을 중복으로 누를 수 없습니다."),
+            @ApiResponse(responseCode = "400", description = "중복으로 버튼을 누를 수 없습니다. (인정, 부정)"),
+    })
     public BasicResponse<String> addDislike(@Valid @PathVariable(name = "member_id") Long memberId, @PathVariable(name = "confirm_id") Long confirmId) {
         Member member = memberService.loadMember(memberId);
         Confirm confirm = confirmService.findById(confirmId);
@@ -44,6 +53,11 @@ public class DislikeController {
     @Parameters({
             @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "confirm_id", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "부정 취소에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     public BasicResponse<String> deleteDislike(@Valid @PathVariable(name = "member_id") Long memberId, @PathVariable(name = "confirm_id") Long confirmId) {
         Member member = memberService.loadMember(memberId);

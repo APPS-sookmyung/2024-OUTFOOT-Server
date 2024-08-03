@@ -3,6 +3,9 @@ package outfoot.outfootserver.confirm.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,26 +22,35 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/confirm/{check_page_id}")
+@Tag(name = "인증판", description = "Confirm API")
 public class ConfirmController {
 
     private final ConfirmService confirmService;
     
     @PostMapping
-    @Operation(summary = "도장판 저장")
+    @Operation(summary = "인증판 저장")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
-            @Parameter(name = "memo", description = "사진 설명", example = "메모"),
-            @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "400", description = "인증판의 개수가 초과되었습니다."),
+            @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
     })
     public BasicResponse<ConfirmResponse> saveConfirm(@PathVariable(name = "check_page_id") Long checkPageId, @Valid @RequestBody ConfirmRequest dto) {
         ConfirmResponse confirm = confirmService.saveConfirm(checkPageId, dto);
         return ResponseUtil.success(confirm);
     }
 
-    @Operation(summary = "도장판 삭제")
+    @Operation(summary = "인증판 삭제")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @DeleteMapping("/{order}")
     public BasicResponse<String> deleteConfirm(@PathVariable(name = "check_page_id") Long checkPageId,
@@ -47,11 +59,15 @@ public class ConfirmController {
         return ResponseUtil.success("인증판 삭제 성공");
     }
 
-    @Operation(summary = "도장판 수정")
+
+    @Operation(summary = "인증판 메모 수정")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
-            @Parameter(name = "memo", description = "사진 설명", example = "메모"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @PutMapping("/{order}")
     public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "check_page_id") Long checkPageId,
@@ -61,10 +77,15 @@ public class ConfirmController {
         return ResponseUtil.success(confirm);
     }
 
-    @Operation(summary = "도장판 조회")
+
+    @Operation(summary = "인증판 조회")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 조회에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @GetMapping("/{order}")
     public BasicResponse<ConfirmResponse> findConfirm(@PathVariable(name = "check_page_id") Long checkPageId,

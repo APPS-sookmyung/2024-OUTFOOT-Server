@@ -1,11 +1,17 @@
 package outfoot.outfootserver.checkpage.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 
 @Builder
-public record CheckPageResponse(@NotBlank String title, String intro, String createdAt, @NotBlank int animalPosition, @NotBlank String animal) {
+public record CheckPageResponse(
+        @Schema(description = "도장판 목표", example = "물 마시기") @NotBlank String title,
+        @Schema(description = "도장판 목표", example = "하루에 한 잔 물 마시기") String intro,
+        @Schema(description = "생성 일자", example = "2024-08-03 15:51:46") String createdAt,
+        @Schema(description = "도장판 메이트 위치", example = "1") @NotBlank int animalPosition,
+        @Schema(description = "도장판 메이트 종류", example = "고양이") @NotBlank String animal) {
 
     public static CheckPageResponse toCheckPage(CheckPage checkPage) {
         return CheckPageResponse.builder()
