@@ -19,8 +19,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("API Test")
-                .description("swagger description")
+                .title("OUTFOOT")
+                .description("OUTFOOT Swagger Documentation")
                 .version("1.0.0");
     }
 }

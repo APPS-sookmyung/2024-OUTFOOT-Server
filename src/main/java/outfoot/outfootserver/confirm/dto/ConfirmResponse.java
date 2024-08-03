@@ -1,12 +1,19 @@
 package outfoot.outfootserver.confirm.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import outfoot.outfootserver.confirm.domain.Confirm;
 
 import java.util.Date;
 @Builder
-public record ConfirmResponse(String memo, String createdAt, Long order, Long checkPageId, long likeCount, long dislikeCount) {
+public record ConfirmResponse(
+        @Schema(description = "사진 설명", example = "메모") String memo,
+        @Schema(description = "생성 일자", example = "2024-08-03 15:51:46") String createdAt,
+        @Schema(description = "도장판 내 인증판 순서", example = "1") Long order,
+        @Schema(description = "도장판 아이디", example = "1") Long checkPageId,
+        @Schema(description = "인정 개수", example = "1") long likeCount,
+        @Schema(description = "부정 개수", example = "0") long dislikeCount) {
 
     public static ConfirmResponse toConfirm(Confirm confirm, long likeCount, long dislikeCount){
         return ConfirmResponse.builder()

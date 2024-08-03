@@ -1,4 +1,7 @@
 package outfoot.outfootserver.confirm.dto;
 
-public record UpdateConfirmRequest(String memo) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record UpdateConfirmRequest(
+        @Schema(description = "사진 설명", example = "메모") String memo) {
 }
