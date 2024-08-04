@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.emotion.domain.Dislike;
@@ -24,6 +25,7 @@ public class Confirm extends BaseTimeEntity {
 
     private String memo;
 
+    private String imageUrl;
 
     @Column(name = "orders")
     private Long order;
@@ -47,8 +49,9 @@ public class Confirm extends BaseTimeEntity {
     }
 
     @Builder
-    public Confirm(String memo, Long order, CheckPage checkPage) {
+    public Confirm(String memo, String imageUrl, Long order, CheckPage checkPage) {
         this.memo = memo;
+        this.imageUrl = imageUrl;
         this.order = order;
         this.checkPage = checkPage;
     }
@@ -56,4 +59,5 @@ public class Confirm extends BaseTimeEntity {
     public void updateMemo(String memo) {
         this.memo = memo;
     }
+    public void updateImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

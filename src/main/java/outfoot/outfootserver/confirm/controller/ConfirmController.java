@@ -11,13 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.confirm.dto.ConfirmListResponse;
 import outfoot.outfootserver.confirm.dto.ConfirmRequest;
 import outfoot.outfootserver.confirm.dto.ConfirmResponse;
 import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
 import outfoot.outfootserver.confirm.service.ConfirmService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,7 +57,7 @@ public class ConfirmController {
     }
 
 
-    @Operation(summary = "인증판 메모 수정")
+    @Operation(summary = "인증판 수정")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
             @Parameter(name = "order", description = "도장판 내 인증판 순서", example = "1"),
@@ -73,7 +70,7 @@ public class ConfirmController {
     public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "check_page_id") Long checkPageId,
                                                      @PathVariable(name = "order") Long order,
                                                      @RequestBody UpdateConfirmRequest dto){
-        ConfirmResponse confirm = confirmService.updateMemo(checkPageId, order, dto.memo());
+        ConfirmResponse confirm = confirmService.updateConfirm(checkPageId, order, dto.memo(), dto.image());
         return ResponseUtil.success(confirm);
     }
 

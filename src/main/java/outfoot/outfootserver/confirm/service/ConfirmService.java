@@ -3,20 +3,20 @@ package outfoot.outfootserver.confirm.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.confirm.domain.Confirm;
-import outfoot.outfootserver.confirm.dto.ConfirmListResponse;
 import outfoot.outfootserver.confirm.dto.ConfirmRequest;
 import outfoot.outfootserver.confirm.dto.ConfirmResponse;
 import outfoot.outfootserver.confirm.exception.ConfirmErrorCode;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
-import outfoot.outfootserver.emotion.domain.Like;
 import outfoot.outfootserver.emotion.repository.DislikeRepository;
 import outfoot.outfootserver.emotion.repository.LikeRepository;
+import outfoot.outfootserver.files.FileUploader;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,8 +29,7 @@ public class ConfirmService {
 
     private final ConfirmRepository confirmRepository;
     private final CheckPageRepository checkPageRepository;
-    private final DislikeRepository dislikeRepository;
-    private final LikeRepository likeRepository;
+    private final FileUploader fileUploader;
 
     @Transactional
     public ConfirmResponse saveConfirm(Long checkPageId, ConfirmRequest dto) {
@@ -55,7 +54,10 @@ public class ConfirmService {
             throw new ConfirmException(ConfirmErrorCode.CONFIRM_LIMIT_EXCEEDED);
         }
 
-        Confirm confirm = dto.toConfirm(dto, order, checkPage);
+        MultipartFile image = dto.image();
+        String imageUrl = fileUploader.uploadFile(image, "confirm");
+
+        Confirm confirm = dto.toConfirm(dto, order, checkPage, imageUrl);
         Confirm saveConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();
@@ -65,9 +67,21 @@ public class ConfirmService {
     }
 
     @Transactional
-    public ConfirmResponse updateMemo(Long checkPageId, Long order, String memo) {
+    public ConfirmResponse updateConfirm(Long checkPageId, Long order, String memo, MultipartFile image) {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
-        confirm.updateMemo(memo);
+
+        if(memo != null && !memo.isBlank()){
+            confirm.updateMemo(memo);
+        }
+
+        if (image != null && !image.isEmpty()){
+            if(confirm.getImageUrl() != null){
+                fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
+            }
+            String imageUrl = fileUploader.uploadFile(image, "confirm");
+            confirm.updateImageUrl(imageUrl);
+        }
+
         Confirm updatedConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();
@@ -79,6 +93,10 @@ public class ConfirmService {
     @Transactional
     public void deleteConfirm(Long checkPageId, Long order) {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
+
+        if(confirm.getImageUrl() != null) {
+            fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
+        }
         confirmRepository.delete(confirm);
     }
 
