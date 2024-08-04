@@ -70,7 +70,7 @@ public class ConfirmService {
     public ConfirmResponse updateConfirm(Long checkPageId, Long order, String memo, MultipartFile image) {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
 
-        if(memo != null && !memo.isBlank()){
+        if(memo != null){
             confirm.updateMemo(memo);
         }
 
@@ -78,6 +78,9 @@ public class ConfirmService {
             if(confirm.getImageUrl() != null){
                 fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
             }
+            String imageUrl = fileUploader.uploadFile(image, "confirm");
+            confirm.updateImageUrl(imageUrl);
+        } else if (image != null && image.isEmpty()) {
             String imageUrl = fileUploader.uploadFile(image, "confirm");
             confirm.updateImageUrl(imageUrl);
         }
