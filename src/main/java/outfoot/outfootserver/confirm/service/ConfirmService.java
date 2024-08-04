@@ -11,6 +11,7 @@ import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.confirm.domain.Confirm;
 import outfoot.outfootserver.confirm.dto.ConfirmRequest;
 import outfoot.outfootserver.confirm.dto.ConfirmResponse;
+import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
 import outfoot.outfootserver.confirm.exception.ConfirmErrorCode;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
@@ -30,7 +31,7 @@ public class ConfirmService {
     private final ConfirmRepository confirmRepository;
     private final CheckPageRepository checkPageRepository;
     private final FileUploader fileUploader;
-
+    private final String path = "confirm/";
     @Transactional
     public ConfirmResponse saveConfirm(Long checkPageId, ConfirmRequest dto) {
         CheckPage checkPage = checkPageRepository.findById(checkPageId)
@@ -55,7 +56,7 @@ public class ConfirmService {
         }
 
         MultipartFile image = dto.image();
-        String imageUrl = fileUploader.uploadFile(image, "confirm");
+        String imageUrl = fileUploader.uploadFile(image, path);
 
         Confirm confirm = dto.toConfirm(dto, order, checkPage, imageUrl);
         Confirm saveConfirm = confirmRepository.save(confirm);
@@ -67,24 +68,18 @@ public class ConfirmService {
     }
 
     @Transactional
-    public ConfirmResponse updateConfirm(Long checkPageId, Long order, String memo, MultipartFile image) {
+    public ConfirmResponse updateConfirm(Long checkPageId, Long order, UpdateConfirmRequest dto) {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
 
-        if(memo != null){
-            confirm.updateMemo(memo);
-        }
-
-        if (image != null && !image.isEmpty()){
-            if(confirm.getImageUrl() != null){
-                fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
+        String imageUrl = null;
+        if (dto.image() != null && !dto.image().isEmpty()){
+            if (confirm.getImageUrl() != null){
+                fileUploader.deleteFile(confirm.getImageUrl(), path);
             }
-            String imageUrl = fileUploader.uploadFile(image, "confirm");
-            confirm.updateImageUrl(imageUrl);
-        } else if (image != null && image.isEmpty()) {
-            String imageUrl = fileUploader.uploadFile(image, "confirm");
-            confirm.updateImageUrl(imageUrl);
+            imageUrl = fileUploader.uploadFile(dto.image(), path);
         }
 
+        confirm.updateConfirm(dto.memo(), imageUrl);
         Confirm updatedConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();

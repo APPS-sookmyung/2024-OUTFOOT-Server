@@ -56,8 +56,12 @@ public class Confirm extends BaseTimeEntity {
         this.checkPage = checkPage;
     }
 
-    public void updateMemo(String memo) {
-        this.memo = memo;
+    public void updateConfirm(String memo, String imageUrl) {
+        if (memo != null) {
+            this.memo = memo;
+        }
+        if (imageUrl != null) {
+            this.imageUrl = imageUrl;
+        }
     }
-    public void updateImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

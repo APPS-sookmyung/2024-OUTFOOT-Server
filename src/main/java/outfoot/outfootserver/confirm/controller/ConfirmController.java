@@ -70,7 +70,7 @@ public class ConfirmController {
     public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "check_page_id") Long checkPageId,
                                                      @PathVariable(name = "order") Long order,
                                                      @RequestBody UpdateConfirmRequest dto){
-        ConfirmResponse confirm = confirmService.updateConfirm(checkPageId, order, dto.memo(), dto.image());
+        ConfirmResponse confirm = confirmService.updateConfirm(checkPageId, order, dto);
         return ResponseUtil.success(confirm);
     }
 
