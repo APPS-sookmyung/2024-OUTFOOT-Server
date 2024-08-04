@@ -39,7 +39,7 @@ public class MemberController {
         return ResponseUtil.success(member);
     }
 
-    @PutMapping("/myPage/{member_id}")
+    @PostMapping("/myPage/{member_id}")
     @Operation(summary = "프로필 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
