@@ -3,8 +3,13 @@ package outfoot.outfootserver.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import outfoot.outfootserver.files.FileUploader;
+import outfoot.outfootserver.files.TestFileUploader;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.MemberResponse;
+import outfoot.outfootserver.member.dto.MyPageRequest;
+import outfoot.outfootserver.member.dto.MyPageResponse;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
 import outfoot.outfootserver.member.exception.AuthException;
@@ -20,6 +25,8 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final TestFileUploader fileUploader;
+    private final String path = "member/";
 
     @Transactional // 데이터 변경이 있는 곳에는 Transactional 다시 걸어줘야 함
     public MemberResponse save(SignUpRequest request) {
@@ -31,6 +38,22 @@ public class MemberService {
         Member member = memberRepository.save(SignUpRequest.toMember(request, friendCode));
         return MemberResponse.toMember(member);
     }
+
+    @Transactional
+    public MyPageResponse update(MyPageRequest dto, Long memberId){
+        Member member = loadMember(memberId);
+        String originImageUrl = member.getImageUrl();
+
+        MultipartFile image = dto.image();
+        String imageUrl = fileUploader.uploadFile(image, path);
+        member.updateMember(dto, imageUrl);
+
+        if (originImageUrl != null && !originImageUrl.isEmpty()) {
+            fileUploader.deleteFile(originImageUrl, path);
+        }
+        return MyPageResponse.toMyPage(member);
+    }
+
 
     // 멤버의 친구 코드 uuid 생성
     public String createCode() {

@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.friend.domain.Friend;
+import outfoot.outfootserver.member.dto.MyPageRequest;
 
 import java.util.List;
 
@@ -57,6 +58,8 @@ public class Member extends BaseTimeEntity {
 
     private String myIntro;
 
+    private String imageUrl;
+
     @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
     private List<Friend> fromMember;
 
@@ -64,14 +67,34 @@ public class Member extends BaseTimeEntity {
     private List<Friend> toMember;
 
     @Builder
-    public Member(UUID userId, String username, String nickname, String email, String password, String provider, String providerId, String code) {
+    public Member(UUID userId, String username, String nickname, String email, String myIntro, String password, String provider, String providerId, String code, String imageUrl) {
         this.userId = userId;
         this.username = username;
         this.nickname = nickname;
         this.email = email;
+        this.myIntro = myIntro;
         this.password = password;
         this.provider = provider;
         this.providerId = providerId;
         this.code = code;
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateMember(MyPageRequest dto, String imageUrl){
+        if ( dto.nickname() != null ) {
+            this.nickname = dto.nickname();
+        }
+        if ( dto.email() != null ) {
+            this.email = dto.email();
+        }
+        if ( dto.myIntro() != null ) {
+            this.myIntro = dto.myIntro();
+        }
+        if ( dto.password() != null ) {
+            this.password = dto.password();
+        }
+        if ( imageUrl != null ) {
+            this.imageUrl = imageUrl;
+        }
     }
 }

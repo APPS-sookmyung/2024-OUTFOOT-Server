@@ -18,6 +18,7 @@ import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.emotion.repository.DislikeRepository;
 import outfoot.outfootserver.emotion.repository.LikeRepository;
 import outfoot.outfootserver.files.FileUploader;
+import outfoot.outfootserver.files.TestFileUploader;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +31,7 @@ public class ConfirmService {
 
     private final ConfirmRepository confirmRepository;
     private final CheckPageRepository checkPageRepository;
-    private final FileUploader fileUploader;
+    private final TestFileUploader fileUploader;
     private final String path = "confirm/";
     @Transactional
     public ConfirmResponse saveConfirm(Long checkPageId, ConfirmRequest dto) {
