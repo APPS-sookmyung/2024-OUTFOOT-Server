@@ -35,7 +35,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판의 개수가 초과되었습니다."),
             @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
     })
-    public BasicResponse<ConfirmResponse> saveConfirm(@PathVariable(name = "check_page_id") Long checkPageId, @Valid @RequestBody ConfirmRequest dto) {
+    public BasicResponse<ConfirmResponse> saveConfirm(@PathVariable(name = "check_page_id") Long checkPageId, @Valid @ModelAttribute ConfirmRequest dto) {
         ConfirmResponse confirm = confirmService.saveConfirm(checkPageId, dto);
         return ResponseUtil.success(confirm);
     }
