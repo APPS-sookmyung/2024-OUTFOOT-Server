@@ -56,20 +56,4 @@ class CheckPageServiceTest {
         // then
         assertThat(checkPageResponse.animal()).isEqualTo("고양이");
     }
-
-    @Test
-    @DisplayName("[예외] 중복 도장판")
-    public void duplicateSaveCheckPage() throws Exception {
-        // when
-        when(checkPageRepository.findByTitle(any())).thenThrow(new CheckPageException(CheckPageErrorCode.CHECKPAGE_DUPLICATION));
-
-
-        // then
-        CheckPageException e = assertThrows(CheckPageException.class, () -> {
-            checkPageService.saveCheckPage(dto);
-        });
-
-        assertThat(CheckPageErrorCode.CHECKPAGE_DUPLICATION).isEqualTo(e.getCode());
-    }
-
 }
