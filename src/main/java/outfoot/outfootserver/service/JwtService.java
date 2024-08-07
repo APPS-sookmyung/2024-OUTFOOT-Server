@@ -27,11 +27,12 @@ public class JwtService {
     }
 
     // 액세스 토큰 발행 메서드
-    public String generateAccessToken(UUID username, long expirationMillis){
+    public String generateAccessToken(UUID username, String nickname, long expirationMillis){
         log.info("액세스 토큰이 발행되었습니다.");
 
         return Jwts.builder()
                 .claim("username", username.toString())
+                .claim("nickname", nickname)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(this.getSigningKey())
@@ -53,16 +54,16 @@ public class JwtService {
         return authorizationHeader.substring(7);
     }
 
-    public String getUserIdFromToken(String token){
+    public String getUsernameFromToken(String token){
         try{
-            String userId = Jwts.parser()
+            String username = Jwts.parser()
                     .verifyWith(this.getSigningKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
                     .get("username", String.class);
             log.info("유저 네임을 반환");
-            return userId;
+            return username;
         }
         catch(JwtException | IllegalArgumentException e){
             log.warn("유효하지 않은 토큰입니다.");

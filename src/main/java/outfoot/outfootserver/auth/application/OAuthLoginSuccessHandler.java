@@ -1,5 +1,6 @@
 package outfoot.outfootserver.auth.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import outfoot.outfootserver.token.repository.RefreshTokenRepository;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -98,11 +100,23 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                 .build();
         refreshTokenRepository.save(newRefreshToken);
 
-        String accessToken = jwtService.generateAccessToken(member.getUsername(), ACCESS_TOKEN_EXPIRATION_TIME);
+        String accessToken = jwtService.generateAccessToken(member.getUsername(), member.getNickname(), ACCESS_TOKEN_EXPIRATION_TIME);
 
-        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
-        String redirectUri = String.format(REDIRECT_URI, encodedName, accessToken, refreshToken);
-        getRedirectStrategy().sendRedirect(request, response, redirectUri);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("username", member.getUsername());
+        responseBody.put("nickname", member.getNickname());
+        responseBody.put("email", member.getEmail());
+        responseBody.put("password", member.getPassword());
+        responseBody.put("code", member.getCode());
+        responseBody.put("accesstoken", accessToken);
+        responseBody.put("refreshtoken", refreshToken);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(responseBody);
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(jsonResponse);
+        response.setStatus(HttpServletResponse.SC_OK);
 
     }
 }

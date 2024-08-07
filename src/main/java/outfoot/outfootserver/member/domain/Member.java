@@ -59,9 +59,11 @@ public class Member extends BaseTimeEntity {
     private List<Friend> toMember;
 
     @Builder
-    public Member(UUID username, String nickname, String provider, String providerId, String code) {
+    public Member(UUID username, String nickname, String email, String password,String provider, String providerId, String code) {
         this.username = username;
         this.nickname = nickname;
+        this.email = email;
+        this.password = password;
         this.provider = provider;
         this.providerId = providerId;
         this.code = code;
