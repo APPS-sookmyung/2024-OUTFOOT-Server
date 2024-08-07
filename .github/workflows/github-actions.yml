@@ -70,5 +70,5 @@ jobs:
           script: |
             sudo docker ps
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/outfoot
-            sudo docker run -d -p 8080:38080 --env-file=.env ${{ secrets.DOCKER_USERNAME }}/outfoot
+            sudo docker run -d -p 8080:8080 --env-file=.env ${{ secrets.DOCKER_USERNAME }}/outfoot
             sudo docker image prune -f
