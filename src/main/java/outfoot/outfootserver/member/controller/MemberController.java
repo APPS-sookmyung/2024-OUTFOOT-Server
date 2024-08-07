@@ -17,10 +17,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/")
 @RequiredArgsConstructor
 @Tag(name = "회원가입", description = "Member API")
 public class MemberController {
+
     @PostMapping("/signup")
     @Parameters({
             @Parameter(name = "username", description = "공백 X", example = "ajeong7038"),
@@ -28,7 +28,7 @@ public class MemberController {
             @Parameter(name = "password", description = "공백 X", example = "password123"),
             @Parameter(name = "email", description = "공백 X", example = "ajung7038@naver.com"),
     })
-    public BasicResponse<String> SignUp (@Valid@RequestBody SignUpRequest dto) {
+    public BasicResponse<String> SignUp (@Valid @RequestBody SignUpRequest dto) {
         long memberId = memberService.save(dto);
         return ResponseUtil.success("가입 성공 " + memberId);
     }

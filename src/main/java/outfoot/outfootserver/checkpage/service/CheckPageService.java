@@ -28,9 +28,6 @@ public class CheckPageService {
     @Transactional
 //    public Long saveCheckPage (Member member, CheckPageRequest dto) {
     public CheckPageResponse saveCheckPage (CheckPageRequest dto) {
-        checkPageRepository.findByTitle(dto.title()).ifPresent(e -> {
-            throw new CheckPageException(CheckPageErrorCode.CHECKPAGE_DUPLICATION);
-        });
 
         // animal_type 찾았는데 없으면 오류 (Animal 클래스 예외 전파), 있으면 Animal 반환
         Animal animal = Animal.of(dto.animalId());
