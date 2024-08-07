@@ -83,7 +83,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         }
         else {
             log.info("기존 유저입니다.");
-            refreshTokenRepository.deleteByUserId(member.getUsername());
+            refreshTokenRepository.deleteByUsername(member.getUsername());
         }
 
         log.info("유저 이름 : {}", name);
@@ -93,7 +93,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String refreshToken = jwtService.generateRefreshToken(member.getUsername(), REFRESH_TOKEN_EXPIRATION_TIME);
 
         RefreshToken newRefreshToken = RefreshToken.builder()
-                .userId(member.getUsername())
+                .username(member.getUsername())
                 .token(refreshToken)
                 .build();
         refreshTokenRepository.save(newRefreshToken);
