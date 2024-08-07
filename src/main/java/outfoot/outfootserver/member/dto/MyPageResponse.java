@@ -25,11 +25,15 @@ public class MyPageResponse {
     @Email
     private String email;
 
-    public static MyPageResponse toMyPage(Member member) {
+    @Schema(description = "프로필 이미지 url", example = "img/png")
+    private String imageUrl;
+
+    public static MyPageResponse toMyPage(Member member, String imageUrl) {
         return new MyPageResponse(
                 member.getNickname(),
                 member.getMyIntro(),
-                member.getEmail()
+                member.getEmail(),
+                imageUrl
         );
     }
 }

@@ -51,7 +51,7 @@ public class MemberService {
         if (originImageUrl != null && !originImageUrl.isEmpty()) {
             fileUploader.deleteFile(originImageUrl, path);
         }
-        return MyPageResponse.toMyPage(member);
+        return MyPageResponse.toMyPage(member, imageUrl);
     }
 
 
