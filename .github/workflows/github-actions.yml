@@ -44,15 +44,6 @@ jobs:
           echo "${{ secrets.YML }}" > ./application.yml
         shell: bash
 
-      # .env 파일 생성
-      - name: make .env
-        if: |
-          contains(github.ref, 'main')
-        run: |
-          touch ./.env
-          echo "${{ secrets.YML }}" >> .env
-        shell: bash
-
       # gradle build
       - name: Build with Gradle
         run: ./gradlew clean build -x test
