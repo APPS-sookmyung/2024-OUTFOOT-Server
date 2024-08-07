@@ -65,7 +65,7 @@ public class ConfirmService {
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
 
-        return ConfirmResponse.toConfirm(saveConfirm, likeCount, dislikeCount);
+        return ConfirmResponse.toConfirm(saveConfirm, likeCount, dislikeCount, imageUrl);
     }
 
     @Transactional
@@ -86,7 +86,7 @@ public class ConfirmService {
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
 
-        return ConfirmResponse.toConfirm(updatedConfirm, likeCount, dislikeCount);
+        return ConfirmResponse.toConfirm(updatedConfirm, likeCount, dislikeCount, imageUrl);
     }
 
     @Transactional
@@ -103,7 +103,8 @@ public class ConfirmService {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
-        return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount);
+        String imageUrl = confirm.getImageUrl();
+        return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
     }
 
 

@@ -18,13 +18,13 @@ import outfoot.outfootserver.confirm.service.ConfirmService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/confirm/{check_page_id}")
+@RequestMapping("/confirm")
 @Tag(name = "인증판", description = "Confirm API")
 public class ConfirmController {
 
     private final ConfirmService confirmService;
     
-    @PostMapping
+    @PostMapping("/{check_page_id}")
     @Operation(summary = "인증판 저장")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
@@ -35,7 +35,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판의 개수가 초과되었습니다."),
             @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
     })
-    public BasicResponse<ConfirmResponse> saveConfirm(@PathVariable(name = "check_page_id") Long checkPageId, @Valid @ModelAttribute ConfirmRequest dto) {
+    public BasicResponse<ConfirmResponse> saveConfirm(@Valid @ModelAttribute ConfirmRequest dto, @PathVariable(name = "check_page_id") Long checkPageId) {
         ConfirmResponse confirm = confirmService.saveConfirm(checkPageId, dto);
         return ResponseUtil.success(confirm);
     }
@@ -49,7 +49,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @DeleteMapping("/{order}")
+    @DeleteMapping("/{check_page_id}/{order}")
     public BasicResponse<String> deleteConfirm(@PathVariable(name = "check_page_id") Long checkPageId,
                                                @PathVariable(name = "order") Long order){
         confirmService.deleteConfirm(checkPageId, order);
@@ -66,10 +66,10 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PutMapping("/{order}")
+    @PostMapping("/{check_page_id}/{order}")
     public BasicResponse<ConfirmResponse> updateMemo(@PathVariable(name = "check_page_id") Long checkPageId,
                                                      @PathVariable(name = "order") Long order,
-                                                     @RequestBody UpdateConfirmRequest dto){
+                                                     @ModelAttribute UpdateConfirmRequest dto){
         ConfirmResponse confirm = confirmService.updateConfirm(checkPageId, order, dto);
         return ResponseUtil.success(confirm);
     }
@@ -84,7 +84,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @GetMapping("/{order}")
+    @GetMapping("/{check_page_id}/{order}")
     public BasicResponse<ConfirmResponse> findConfirm(@PathVariable(name = "check_page_id") Long checkPageId,
                                                       @PathVariable(name = "order") Long order){
         ConfirmResponse confirm = confirmService.findConfirm(checkPageId, order);

@@ -13,9 +13,10 @@ public record ConfirmResponse(
         @Schema(description = "도장판 내 인증판 순서", example = "1") Long order,
         @Schema(description = "도장판 아이디", example = "1") Long checkPageId,
         @Schema(description = "인정 개수", example = "1") long likeCount,
-        @Schema(description = "부정 개수", example = "0") long dislikeCount) {
+        @Schema(description = "부정 개수", example = "0") long dislikeCount,
+        @Schema(description = "이미지 주소", example = "img/png") String imageUrl) {
 
-    public static ConfirmResponse toConfirm(Confirm confirm, long likeCount, long dislikeCount){
+    public static ConfirmResponse toConfirm(Confirm confirm, long likeCount, long dislikeCount, String imageUrl){
         return ConfirmResponse.builder()
                 .memo(confirm.getMemo())
                 .createdAt(confirm.getCreatedAt())
@@ -23,6 +24,7 @@ public record ConfirmResponse(
                 .likeCount(likeCount)
                 .dislikeCount(dislikeCount)
                 .checkPageId(confirm.getCheckPage().getId())
+                .imageUrl(imageUrl)
                 .build();
     }
 }
