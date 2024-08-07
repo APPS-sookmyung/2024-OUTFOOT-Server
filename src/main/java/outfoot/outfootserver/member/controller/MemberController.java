@@ -44,7 +44,7 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
     })
-    public BasicResponse<MyPageResponse> UpdateMyPage (@Valid @RequestBody MyPageRequest dto, @PathVariable(name = "member_id") Long memberId) {
+    public BasicResponse<MyPageResponse> UpdateMyPage (@Valid @ModelAttribute MyPageRequest dto, @PathVariable(name = "member_id") Long memberId) {
         MyPageResponse member = memberService.update(dto, memberId);
         return ResponseUtil.success(member);
     }
