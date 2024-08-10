@@ -1,6 +1,7 @@
 package outfoot.outfootserver.confirm.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import outfoot.outfootserver.confirm.domain.Confirm;
@@ -8,6 +9,7 @@ import outfoot.outfootserver.confirm.domain.Confirm;
 import java.util.Date;
 @Builder
 public record ConfirmResponse(
+        @Schema(description = "인증판 아이디", example = "1") @NotNull Long id,
         @Schema(description = "사진 설명", example = "메모") String memo,
         @Schema(description = "생성 일자", example = "2024-08-03 15:51:46") String createdAt,
         @Schema(description = "도장판 내 인증판 순서", example = "1") Long order,
@@ -18,6 +20,7 @@ public record ConfirmResponse(
 
     public static ConfirmResponse toConfirm(Confirm confirm, long likeCount, long dislikeCount, String imageUrl){
         return ConfirmResponse.builder()
+                .id(confirm.getId())
                 .memo(confirm.getMemo())
                 .createdAt(confirm.getCreatedAt())
                 .order(confirm.getOrder())
