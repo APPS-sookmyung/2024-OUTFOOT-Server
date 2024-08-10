@@ -50,6 +50,4 @@ public class MemberController {
     }
 
     private final MemberService memberService;
-    // 내 정보 확인
-    // BasicResponse로 감싸주기
 }

@@ -44,16 +44,20 @@ public class MemberService {
         Member member = loadMember(memberId);
         String originImageUrl = member.getImageUrl();
 
-        MultipartFile image = dto.image();
-        String imageUrl = fileUploader.uploadFile(image, path);
+        String imageUrl = null;
+        if (dto.image() != null && !dto.image().isEmpty()){
+            MultipartFile image = dto.image();
+            imageUrl = fileUploader.uploadFile(image, path);
+        }
+
         member.updateMember(dto, imageUrl);
 
         if (originImageUrl != null && !originImageUrl.isEmpty()) {
             fileUploader.deleteFile(originImageUrl, path);
         }
+
         return MyPageResponse.toMyPage(member, imageUrl);
     }
-
 
     // 멤버의 친구 코드 uuid 생성
     public String createCode() {
