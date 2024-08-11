@@ -50,11 +50,11 @@ public class MemberService {
             imageUrl = fileUploader.uploadFile(image, path);
         }
 
-        member.updateMember(dto, imageUrl);
-
         if (originImageUrl != null && !originImageUrl.isEmpty()) {
             fileUploader.deleteFile(originImageUrl, path);
         }
+        member.updateMember(dto, imageUrl);
+
 
         return MyPageResponse.toMyPage(member, imageUrl);
     }
