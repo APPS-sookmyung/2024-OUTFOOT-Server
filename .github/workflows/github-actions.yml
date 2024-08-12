@@ -4,7 +4,7 @@ name: OUTFOOT CI/CD (Docker Image)
 # event trigger
 on:
   push:
-    branches: [ "ajeong_fix/#61" ]
+    branches: [ "main" ]
 
 jobs:
   CI-CD:
