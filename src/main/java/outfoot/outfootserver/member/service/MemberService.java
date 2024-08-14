@@ -45,16 +45,23 @@ public class MemberService {
         String originImageUrl = member.getImageUrl();
 
         String imageUrl = null;
-        if (dto.image() != null && !dto.image().isEmpty()){
-            MultipartFile image = dto.image();
-            imageUrl = fileUploader.uploadFile(image, path);
-        }
+        try {
+            if (dto.image() != null && !dto.image().isEmpty()) {
+                MultipartFile image = dto.image();
+                imageUrl = fileUploader.uploadFile(image, path);
 
-        if (originImageUrl != null && !originImageUrl.isEmpty()) {
-            fileUploader.deleteFile(originImageUrl, path);
+                // 기존 이미지가 존재하고, 새로운 이미지가 존재하는 경우, 기존 이미지 삭제
+                if (originImageUrl != null && !originImageUrl.isEmpty()) {
+                    fileUploader.deleteFile(originImageUrl, path);
+                }
+            } else {
+            // 새로운 이미지가 존재하지 않는 경우
+                imageUrl = originImageUrl;
+            }
+            member.updateMember(dto, imageUrl);
+        } catch (Exception e) {
+            throw new AuthException(AuthErrorCode.FILE_NOT_FOUND);
         }
-        member.updateMember(dto, imageUrl);
-
 
         return MyPageResponse.toMyPage(member, imageUrl);
     }

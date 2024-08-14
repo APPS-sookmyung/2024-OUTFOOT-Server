@@ -56,8 +56,11 @@ public class ConfirmService {
             throw new ConfirmException(ConfirmErrorCode.CONFIRM_LIMIT_EXCEEDED);
         }
 
-        MultipartFile image = dto.image();
-        String imageUrl = fileUploader.uploadFile(image, path);
+        String imageUrl = null;
+        if (dto.image() != null && !dto.image().isEmpty()) {
+            MultipartFile image = dto.image();
+            imageUrl = fileUploader.uploadFile(image, path);
+        }
 
         Confirm confirm = dto.toConfirm(dto, order, checkPage, imageUrl);
         Confirm saveConfirm = confirmRepository.save(confirm);
