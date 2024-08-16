@@ -1,6 +1,7 @@
 package outfoot.outfootserver.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +14,7 @@ import outfoot.outfootserver.common.response.ErrorEntity;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.emotion.exception.EmotionException;
+import outfoot.outfootserver.member.exception.AuthErrorCode;
 import outfoot.outfootserver.member.exception.AuthException;
 
 import java.util.HashMap;
@@ -58,5 +60,21 @@ public class GlobalExceptionHandler {
     public BasicResponse<ErrorEntity> EmotionInvalidRequestException(EmotionException e){
         log.error("Emotion Invalid Request({})={}", e.getCode(), e.getMessage());
         return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public BasicResponse<ErrorEntity> handleDataIntegrityViolationException(AuthException e) {
+        if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+            org.hibernate.exception.ConstraintViolationException constraintViolationException =
+                    (org.hibernate.exception.ConstraintViolationException) e.getCause();
+
+            if (constraintViolationException.getConstraintName().contains("member.UK_")) {
+                log.error("Duplicate Member Entry({})={}", AuthErrorCode.MEMBER_DUPLICATED, constraintViolationException.getMessage());
+                return ResponseUtil.error(new ErrorEntity(AuthErrorCode.MEMBER_DUPLICATED.name(), AuthErrorCode.MEMBER_DUPLICATED.getMessage()));
+            }
+        }
+        log.error("Data Intergrity Violation: {}", e.getMessage());
+        return ResponseUtil.error(new ErrorEntity("DATA_INTERGRITY_VIOLATION", "data intergrity violation occured."));
     }
 }

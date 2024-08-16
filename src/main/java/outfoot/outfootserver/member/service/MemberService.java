@@ -1,6 +1,7 @@
 package outfoot.outfootserver.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.member.domain.Member;
@@ -23,13 +24,19 @@ public class MemberService {
 
     @Transactional // 데이터 변경이 있는 곳에는 Transactional 다시 걸어줘야 함
     public MemberResponse save(SignUpRequest request) {
-        memberRepository.findByUsername(request.getUsername()).ifPresent(e -> {
-            throw new AuthException(AuthErrorCode.MEMBER_DUPLICATED);
-        });
+        try {
+            memberRepository.findByUsername(request.getUsername()).ifPresent(e -> {
+                throw new AuthException(AuthErrorCode.MEMBER_DUPLICATED);
+            });
 
-        String friendCode = createCode();
-        Member member = memberRepository.save(SignUpRequest.toMember(request, friendCode));
-        return MemberResponse.toMember(member);
+            String friendCode = createCode();
+            Member member = memberRepository.save(SignUpRequest.toMember(request, friendCode));
+            return MemberResponse.toMember(member);
+        } catch (DataIntegrityViolationException e){
+            throw new AuthException(AuthErrorCode.MEMBER_DUPLICATED);
+        }
+
+
     }
 
     // 멤버의 친구 코드 uuid 생성
