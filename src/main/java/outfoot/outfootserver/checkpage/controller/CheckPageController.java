@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import outfoot.outfootserver.checkpage.dto.CheckPageCountListDto;
 import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
@@ -45,7 +46,7 @@ public class CheckPageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "도장판 전체 조회에 성공하였습니다."),
     })
-    public BasicResponse<List<CheckPageListResponse>> findAllCheckPage() {
+    public BasicResponse<CheckPageCountListDto> findAllCheckPage() {
         return ResponseUtil.success(checkPageService.findAllCheckPage());
     }
 
