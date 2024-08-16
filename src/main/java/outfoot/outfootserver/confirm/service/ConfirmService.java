@@ -3,20 +3,22 @@ package outfoot.outfootserver.confirm.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.confirm.domain.Confirm;
-import outfoot.outfootserver.confirm.dto.ConfirmListResponse;
 import outfoot.outfootserver.confirm.dto.ConfirmRequest;
 import outfoot.outfootserver.confirm.dto.ConfirmResponse;
+import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
 import outfoot.outfootserver.confirm.exception.ConfirmErrorCode;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
-import outfoot.outfootserver.emotion.domain.Like;
 import outfoot.outfootserver.emotion.repository.DislikeRepository;
 import outfoot.outfootserver.emotion.repository.LikeRepository;
+import outfoot.outfootserver.files.FileUploader;
+import outfoot.outfootserver.files.TestFileUploader;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,9 +31,8 @@ public class ConfirmService {
 
     private final ConfirmRepository confirmRepository;
     private final CheckPageRepository checkPageRepository;
-    private final DislikeRepository dislikeRepository;
-    private final LikeRepository likeRepository;
-
+    private final TestFileUploader fileUploader;
+    private final String path = "confirm/";
     @Transactional
     public ConfirmResponse saveConfirm(Long checkPageId, ConfirmRequest dto) {
         CheckPage checkPage = checkPageRepository.findById(checkPageId)
@@ -55,30 +56,49 @@ public class ConfirmService {
             throw new ConfirmException(ConfirmErrorCode.CONFIRM_LIMIT_EXCEEDED);
         }
 
-        Confirm confirm = dto.toConfirm(dto, order, checkPage);
+        String imageUrl = null;
+        if (dto.image() != null && !dto.image().isEmpty()) {
+            MultipartFile image = dto.image();
+            imageUrl = fileUploader.uploadFile(image, path);
+        }
+
+        Confirm confirm = dto.toConfirm(dto, order, checkPage, imageUrl);
         Confirm saveConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
 
-        return ConfirmResponse.toConfirm(saveConfirm, likeCount, dislikeCount);
+        return ConfirmResponse.toConfirm(saveConfirm, likeCount, dislikeCount, imageUrl);
     }
 
     @Transactional
-    public ConfirmResponse updateMemo(Long checkPageId, Long order, String memo) {
+    public ConfirmResponse updateConfirm(Long checkPageId, Long order, UpdateConfirmRequest dto) {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
-        confirm.updateMemo(memo);
+
+        String imageUrl = null;
+        if (dto.image() != null && !dto.image().isEmpty()){
+            if (confirm.getImageUrl() != null){
+                fileUploader.deleteFile(confirm.getImageUrl(), path);
+            }
+            imageUrl = fileUploader.uploadFile(dto.image(), path);
+        }
+
+        confirm.updateConfirm(dto.memo(), imageUrl);
         Confirm updatedConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
 
-        return ConfirmResponse.toConfirm(updatedConfirm, likeCount, dislikeCount);
+        return ConfirmResponse.toConfirm(updatedConfirm, likeCount, dislikeCount, imageUrl);
     }
 
     @Transactional
     public void deleteConfirm(Long checkPageId, Long order) {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
+
+        if(confirm.getImageUrl() != null) {
+            fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
+        }
         confirmRepository.delete(confirm);
     }
 
@@ -86,7 +106,8 @@ public class ConfirmService {
         Confirm confirm = findByCheckPageIdAndOrder(checkPageId, order);
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
-        return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount);
+        String imageUrl = confirm.getImageUrl();
+        return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
     }
 
 

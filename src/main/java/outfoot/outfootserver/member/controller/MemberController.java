@@ -13,6 +13,8 @@ import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.MemberResponse;
+import outfoot.outfootserver.member.dto.MyPageRequest;
+import outfoot.outfootserver.member.dto.MyPageResponse;
 import outfoot.outfootserver.member.dto.SignUpRequest;
 import outfoot.outfootserver.member.service.MemberService;
 
@@ -37,7 +39,15 @@ public class MemberController {
         return ResponseUtil.success(member);
     }
 
+    @PostMapping("/myPage/{member_id}")
+    @Operation(summary = "프로필 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
+    })
+    public BasicResponse<MyPageResponse> UpdateMyPage (@Valid @ModelAttribute MyPageRequest dto, @PathVariable(name = "member_id") Long memberId) {
+        MyPageResponse member = memberService.update(dto, memberId);
+        return ResponseUtil.success(member);
+    }
+
     private final MemberService memberService;
-    // 내 정보 확인
-    // BasicResponse로 감싸주기
 }
