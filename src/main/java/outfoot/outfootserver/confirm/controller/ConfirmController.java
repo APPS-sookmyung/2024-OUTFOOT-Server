@@ -90,7 +90,8 @@ public class ConfirmController {
         ConfirmResponse confirm = confirmService.findConfirm(checkPageId, order);
         return ResponseUtil.success(confirm);
     }
-
+    
+    @Operation(summary = "인증판 전체 조회")
     @GetMapping("/{check_page_id}")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
