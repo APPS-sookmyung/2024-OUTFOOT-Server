@@ -91,11 +91,15 @@ public class ConfirmController {
         return ResponseUtil.success(confirm);
     }
 
-    @GetMapping
+    @GetMapping("/{check_page_id}")
+    @Parameters({
+            @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
+    })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증판 전체 조회에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
     })
-    public BasicResponse<ConfirmListDto> findAllConfirm(){
-        return ResponseUtil.success(confirmService.findAllConfirm());
+    public BasicResponse<ConfirmListDto> findAllConfirm(@PathVariable(name = "check_page_id") Long checkPageId){
+        return ResponseUtil.success(confirmService.findAllConfirm(checkPageId));
     }
 }

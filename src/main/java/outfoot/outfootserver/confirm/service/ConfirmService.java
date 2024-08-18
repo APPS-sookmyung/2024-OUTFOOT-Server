@@ -108,14 +108,18 @@ public class ConfirmService {
         return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
     }
 
-    public ConfirmListDto findAllConfirm() {
+    public ConfirmListDto findAllConfirm(Long checkPageId) {
         List<Confirm> confirmList = confirmRepository.findAll();
 
         List<ConfirmListResponse> confirmDtoList = confirmList.stream()
                 .map(ConfirmListResponse::toConfirmList)
                 .toList();
 
-        return new ConfirmListDto(confirmRepository.count(), confirmDtoList);
+        CheckPage checkPage = checkPageRepository.findById(checkPageId)
+                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
+        String animal = checkPage.getAnimal();
+
+        return new ConfirmListDto(confirmRepository.count(),  animal, confirmDtoList);
     }
 
 
