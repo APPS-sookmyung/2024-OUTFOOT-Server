@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.confirm.dto.ConfirmRequest;
-import outfoot.outfootserver.confirm.dto.ConfirmResponse;
-import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
+import outfoot.outfootserver.confirm.dto.*;
 import outfoot.outfootserver.confirm.service.ConfirmService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -91,8 +91,11 @@ public class ConfirmController {
         return ResponseUtil.success(confirm);
     }
 
-//    @GetMapping
-//    public BasicResponse<List<ConfirmListResponse>> findAllConfirm(){
-//        return ResponseUtil.success(confirmService.findAllConfirm());
-//    }
+    @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 전체 조회에 성공하였습니다."),
+    })
+    public BasicResponse<ConfirmListDto> findAllConfirm(){
+        return ResponseUtil.success(confirmService.findAllConfirm());
+    }
 }

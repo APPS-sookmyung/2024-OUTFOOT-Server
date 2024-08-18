@@ -9,9 +9,7 @@ import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.confirm.domain.Confirm;
-import outfoot.outfootserver.confirm.dto.ConfirmRequest;
-import outfoot.outfootserver.confirm.dto.ConfirmResponse;
-import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
+import outfoot.outfootserver.confirm.dto.*;
 import outfoot.outfootserver.confirm.exception.ConfirmErrorCode;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
@@ -108,6 +106,16 @@ public class ConfirmService {
         long dislikeCount = confirm.getDisLikeCount();
         String imageUrl = confirm.getImageUrl();
         return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
+    }
+
+    public ConfirmListDto findAllConfirm() {
+        List<Confirm> confirmList = confirmRepository.findAll();
+
+        List<ConfirmListResponse> confirmDtoList = confirmList.stream()
+                .map(ConfirmListResponse::toConfirmList)
+                .toList();
+
+        return new ConfirmListDto(confirmRepository.count(), confirmDtoList);
     }
 
 
