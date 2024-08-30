@@ -23,12 +23,10 @@ public class Confirm extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String memo;
+    private String title;
+    private String content;
 
     private String imageUrl;
-
-    @Column(name = "orders")
-    private Long order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "check_page_id") //id
@@ -49,17 +47,16 @@ public class Confirm extends BaseTimeEntity {
     }
 
     @Builder
-    public Confirm(String memo, String imageUrl, Long order, CheckPage checkPage) {
-        this.memo = memo;
+    public Confirm(String title, String content, String imageUrl, CheckPage checkPage) {
+        this.title = title;
+        this.content = content;
         this.imageUrl = imageUrl;
-        this.order = order;
         this.checkPage = checkPage;
     }
 
-    public void updateConfirm(String memo, String imageUrl) {
-        if (memo != null) {
-            this.memo = memo;
-        }
+    public void updateConfirm(String title, String content, String imageUrl) {
+        this.title = title;
+        this.content = content;
         if (imageUrl != null) {
             this.imageUrl = imageUrl;
         }

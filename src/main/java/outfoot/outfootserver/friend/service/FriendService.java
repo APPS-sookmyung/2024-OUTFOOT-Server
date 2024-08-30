@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.friend.domain.Friend;
 import outfoot.outfootserver.friend.dto.AddFriendRequest;
+import outfoot.outfootserver.friend.dto.FriendCountListResponse;
 import outfoot.outfootserver.friend.dto.FriendListResponse;
-import outfoot.outfootserver.friend.exception.AuthErrorCode;
-import outfoot.outfootserver.friend.exception.AuthException;
+import outfoot.outfootserver.friend.exception.FriendErrorCode;
+import outfoot.outfootserver.friend.exception.FriendException;
 import outfoot.outfootserver.friend.repository.FriendRepository;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.repository.MemberRepository;
@@ -19,43 +20,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FriendService {
     private final FriendRepository friendRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
-    public Long addFriend(Member fromMember,Member toMember){
+    public void addFriend(Member fromMember, Member toMember){
+
         if (fromMember.equals(toMember))
-            throw new AuthException(AuthErrorCode.NOT_FRINED_SELF);
-        if (friendRepository.findFriend(fromMember, toMember).isPresent())
-            throw new AuthException(AuthErrorCode.FRIEND_DUPLICATED);
+            throw new FriendException(FriendErrorCode.NOT_FRIEND_SELF);
 
-        AddFriendRequest dto = new AddFriendRequest(fromMember, toMember);
-        Friend newFriend = dto.toFriend();
+        friendRepository.findFriend(fromMember, toMember)
+                .ifPresent(e -> {
+                    throw new FriendException(FriendErrorCode.FRIEND_DUPLICATED);
+                });
 
+        Friend newFriend = AddFriendRequest.toFriend(fromMember, toMember);
         friendRepository.save(newFriend);
-        return newFriend.getFriendId();
     }
 
     @Transactional
-    public  void deleteFriend(Long friendId) {
+    public  void deleteFriend(Long friendId) { // TODO: 친구 테이블 내 값도 삭제 필요
         Friend friend = friendRepository.findById(friendId)
-                .orElseThrow(() -> new AuthException(AuthErrorCode.FRIEND_NOT_FOUND));
+                .orElseThrow(() -> new FriendException(FriendErrorCode.FRIEND_NOT_FOUND));
 
         friendRepository.delete(friend);
     }
 
-    @Transactional(readOnly = true)
-    public Member searchFriend(String searchCode) {
-        Member member = memberRepository.findByCode(searchCode)
-                .orElseThrow(()->new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
-
-        return member;
-    }
-
-    public List<FriendListResponse> findAllFriend(Long memberId){
+    public FriendCountListResponse findAllFriend(Long memberId){
         List<Friend> friendList = friendRepository.findByMemberId(memberId);
 
-        return friendList.stream()
+        List<FriendListResponse> friendLists = friendList.stream()
                 .map(FriendListResponse::toFriendList)
                 .toList();
+
+        return new FriendCountListResponse(friendList.size(), friendLists);
     }
 }

@@ -35,7 +35,7 @@ class CheckPageControllerTest extends ControllerTest {
         checkPageRequest = CheckPageRequest.builder()
                 .title("목표")
                 .intro("한 줄 소개")
-                .animalId("1")
+                .animalId(1)
                 .build();
 
         checkPage = CheckPageResponse.builder()
@@ -80,7 +80,7 @@ class CheckPageControllerTest extends ControllerTest {
         checkPageRequest = CheckPageRequest.builder()
                 .title("  ")
                 .intro("한 줄 소개")
-                .animalId("1")
+                .animalId(1)
                 .build();
 
         // then

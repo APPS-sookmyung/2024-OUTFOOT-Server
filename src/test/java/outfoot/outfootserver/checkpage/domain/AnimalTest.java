@@ -17,7 +17,7 @@ class AnimalTest {
     @DisplayName("[성공] 동물 이름 반환")
     public void findAnimalType() throws Exception {
         // when
-        Animal animal = Animal.of("1");
+        Animal animal = Animal.of(1);
 
         // then
         assertThat(animal.getAnimalName()).isEqualTo("고양이");
@@ -27,7 +27,7 @@ class AnimalTest {
     @DisplayName("[예외] 동물 존재 X")
     public void notFoundAnimal() throws Exception {
         CheckPageException e = assertThrows(CheckPageException.class, () -> {
-            Animal.of("3");
+            Animal.of(3);
         });
 
         assertThat(CheckPageErrorCode.ANIMAL_NOT_FOUND).isEqualTo(e.getCode());

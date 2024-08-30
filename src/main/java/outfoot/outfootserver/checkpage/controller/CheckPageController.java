@@ -10,14 +10,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.checkpage.dto.CheckPageCountListDto;
-import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/checkpages")
@@ -32,10 +29,7 @@ public class CheckPageController {
             @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "도장 메이트 번호를 찾을 수 없습니다."),
     })
-//    public BasicResponse<String> saveCheckPage(@Valid @RequestBody CheckPageRequest dto, String memberId) {
     public BasicResponse<CheckPageResponse> saveCheckPage(@Valid @RequestBody CheckPageRequest dto) {
-        // member 연동이 안 되어 있어 우선 member 없이 checkpage 생성 구현
-//        checkPageService.saveCheckPage(member, dto);
         CheckPageResponse checkPage = checkPageService.saveCheckPage(dto);
         return ResponseUtil.success(checkPage);
     }
