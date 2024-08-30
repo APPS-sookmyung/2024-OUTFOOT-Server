@@ -93,6 +93,11 @@ public class MemberService {
         return sb.toString();
     }
 
+    public Member searchFriend(String searchCode) {
+        return memberRepository.findByCode(searchCode)
+                .orElseThrow(()->new outfoot.outfootserver.friend.exception.AuthException(outfoot.outfootserver.friend.exception.AuthErrorCode.MEMBER_NOT_FOUND));
+    }
+
     // TODO: 로그인 기능 구현 시 리턴 값 수정 필요
     public Member loadMember(Long member_id) {
         return memberRepository.findById(member_id)

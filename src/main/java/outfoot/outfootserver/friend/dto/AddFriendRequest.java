@@ -19,7 +19,7 @@ public class AddFriendRequest {
     @Schema(description = "친구 신청을 받은 멤버 (친구)", example = "메모")
     private Member toMember;
 
-    public Friend toFriend(){
+    public static Friend toFriend(Member fromMember, Member toMember){
         return Friend.builder()
                 .fromMember(fromMember)
                 .toMember(toMember)

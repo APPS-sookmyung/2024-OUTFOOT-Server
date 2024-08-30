@@ -48,7 +48,7 @@ public class ConfirmService {
         if (dailyConfirms.size() >= 1){
             throw new ConfirmException(ConfirmErrorCode.CONFIRM_DAILY_LIMIT_EXCEEDED);
         }
-
+//
 //      한 도장판에 30번의 인증판만 존재할 수 있음.
         List<Confirm> confirmList = confirmRepository.findByCheckPageId(checkPageId);
         long order = confirmList.size() + 1;
@@ -62,7 +62,7 @@ public class ConfirmService {
             imageUrl = fileUploader.uploadFile(image, path);
         }
 
-        Confirm confirm = dto.toConfirm(dto, order, checkPage, imageUrl);
+        Confirm confirm = ConfirmRequest.toConfirm(dto, order, checkPage, imageUrl);
         Confirm saveConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();
@@ -83,7 +83,7 @@ public class ConfirmService {
             imageUrl = fileUploader.uploadFile(dto.image(), path);
         }
 
-        confirm.updateConfirm(dto.memo(), imageUrl);
+        confirm.updateConfirm(dto.title(), dto.content(), imageUrl);
         Confirm updatedConfirm = confirmRepository.save(confirm);
 
         long likeCount = confirm.getLikeCount();
