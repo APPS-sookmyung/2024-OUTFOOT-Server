@@ -35,9 +35,8 @@ public class ConfirmController {
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "400", description = "인증판의 개수가 초과되었습니다."),
-            @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
+            @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
+//            @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
     })
     public BasicResponse<ConfirmResponse> saveConfirm(@Valid @ModelAttribute ConfirmRequest dto, @PathVariable(name = "check_page_id") Long checkPageId) {
         CheckPage checkPage = checkPageService.findById(checkPageId);

@@ -30,7 +30,7 @@ public class MemberController {
         return ResponseUtil.success(member);
     }
 
-    @PostMapping("/myPage/{member_id}")
+    @PutMapping("/my/{member_id}")
     @Operation(summary = "프로필 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
@@ -42,7 +42,7 @@ public class MemberController {
     }
 
     @GetMapping("/my/{id}")
-    @Operation(summary = "내 프로필 조회")
+    @Operation(summary = "내 정보 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 정보 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),

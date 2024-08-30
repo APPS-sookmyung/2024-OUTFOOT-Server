@@ -51,6 +51,6 @@ public class FriendService {
                 .map(FriendListResponse::toFriendList)
                 .toList();
 
-        return new FriendCountListResponse(friendRepository.count(), friendLists);
+        return new FriendCountListResponse(friendList.size(), friendLists);
     }
 }

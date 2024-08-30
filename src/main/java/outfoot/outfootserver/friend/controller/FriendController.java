@@ -45,6 +45,14 @@ public class FriendController {
     }
 
     @DeleteMapping("/{friend_id}")
+    @Operation(summary = "친구 추가")
+    @Parameters({
+            @Parameter(name = "friend_id", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "친구 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 친구입니다."),
+    })
     public BasicResponse<String> deleteFriends(@PathVariable Long friend_id) {
         friendService.deleteFriend(friend_id);
         return ResponseUtil.success("친구 삭제 성공");
@@ -73,6 +81,7 @@ public class FriendController {
             @ApiResponse(responseCode = "200", description = "친구 전체 조회에 성공하였습니다."),
     })
     public BasicResponse<FriendCountListResponse> findAllFriend(@PathVariable(name = "member_id") Long memberId){
+        memberService.loadMember(memberId);
         return ResponseUtil.success(friendService.findAllFriend(memberId));
     }
 
