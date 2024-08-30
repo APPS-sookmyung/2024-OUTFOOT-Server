@@ -12,12 +12,11 @@ public record ConfirmRequest(
         @Schema(description = "메모 (내용)", example = "마치 하마가 된 거 같고, 뿌듯함ㅋㅋ") String content,
         @Schema(description = "이미지", example = "image/png") MultipartFile image) {
 
-    public static Confirm toConfirm(ConfirmRequest dto, Long order, CheckPage checkPage, String imageUrl){
+    public static Confirm toConfirm(ConfirmRequest dto, CheckPage checkPage, String imageUrl){
         return Confirm.builder()
                 .title(dto.title())
                 .content(dto.content())
                 .imageUrl(imageUrl)
-                .order(order)
                 .checkPage(checkPage)
                 .build();
     }

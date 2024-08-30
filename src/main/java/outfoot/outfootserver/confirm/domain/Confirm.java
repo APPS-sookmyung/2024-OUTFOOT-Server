@@ -28,9 +28,6 @@ public class Confirm extends BaseTimeEntity {
 
     private String imageUrl;
 
-    @Column(name = "orders")
-    private Long order;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "check_page_id") //id
     private CheckPage checkPage; //객체
@@ -50,11 +47,10 @@ public class Confirm extends BaseTimeEntity {
     }
 
     @Builder
-    public Confirm(String title, String content, String imageUrl, Long order, CheckPage checkPage) {
+    public Confirm(String title, String content, String imageUrl, CheckPage checkPage) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
-        this.order = order;
         this.checkPage = checkPage;
     }
 

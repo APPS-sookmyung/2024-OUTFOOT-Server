@@ -23,14 +23,11 @@ public class CheckPageService {
     private final CheckPageRepository checkPageRepository;
 
     @Transactional
-//    public Long saveCheckPage (Member member, CheckPageRequest dto) {
     public CheckPageResponse saveCheckPage (CheckPageRequest dto) {
 
         // animal_type 찾았는데 없으면 오류 (Animal 클래스 예외 전파), 있으면 Animal 반환
         Animal animal = Animal.of(dto.animalId());
 
-
-//        CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(member, dto));
         CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName()));
 
         return CheckPageResponse.toCheckPage(checkPage);
