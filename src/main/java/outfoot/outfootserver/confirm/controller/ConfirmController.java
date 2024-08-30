@@ -68,7 +68,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable Long id,
                                                            @ModelAttribute UpdateConfirmRequest dto){
         return ResponseUtil.success(confirmService.updateConfirm(id, dto));
