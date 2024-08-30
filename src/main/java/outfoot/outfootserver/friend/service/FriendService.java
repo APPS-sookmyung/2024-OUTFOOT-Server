@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FriendService {
     private final FriendRepository friendRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public void addFriend(Member fromMember, Member toMember){

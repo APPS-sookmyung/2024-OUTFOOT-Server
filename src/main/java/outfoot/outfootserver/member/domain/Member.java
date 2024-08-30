@@ -12,6 +12,7 @@ import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.friend.domain.Friend;
 import outfoot.outfootserver.member.dto.MyPageRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.time.LocalDateTime;
@@ -30,15 +31,15 @@ public class Member extends BaseTimeEntity {
     @Column(name = "users_uuid", columnDefinition = "BINARY(16)", unique = true)
     private UUID userId;
 
-    @NotNull @Column//(unique = true)
+    @NotNull @Column
     private String username;
 
     //@NotNull
-    @Column(unique = false)
+    @Column(unique = true)
     private String nickname;
 
     //@NotNull
-    @Column(unique = false)
+    @Column
     private String email;
 
     // @NotNull
@@ -60,11 +61,12 @@ public class Member extends BaseTimeEntity {
 
     private String imageUrl;
 
-    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
-    private List<Friend> fromMember;
 
-    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
-    private List<Friend> toMember;
+    @OneToMany(mappedBy = "fromMember")
+    private List<Friend> fromMember = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toMember")
+    private List<Friend> toMember = new ArrayList<>();
 
     @Builder
     public Member(UUID userId, String username, String nickname, String email, String myIntro, String password, String provider, String providerId, String code, String imageUrl) {

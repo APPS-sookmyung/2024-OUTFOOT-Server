@@ -30,18 +30,19 @@ public class MemberService {
 
     @Transactional // 데이터 변경이 있는 곳에는 Transactional 다시 걸어줘야 함
     public MemberResponse save(SignUpRequest request) {
-        try {
-            memberRepository.findByUsername(request.getUsername()).ifPresent(e -> {
-                throw new AuthException(AuthErrorCode.MEMBER_DUPLICATED);
-            });
 
-            String friendCode = createCode();
-            Member member = memberRepository.save(SignUpRequest.toMember(request, friendCode));
-            return MemberResponse.toMember(member);
-        } catch (DataIntegrityViolationException e){
+        // username
+        memberRepository.findByUsername(request.getUsername()).ifPresent(e -> {
             throw new AuthException(AuthErrorCode.MEMBER_DUPLICATED);
-        }
+        });
+        // nickname
+        memberRepository.findByNickname(request.getNickname()).ifPresent(e -> {
+            throw new AuthException(AuthErrorCode.NICKNAME_DUPLICATED);
+        });
 
+        String friendCode = createCode();
+        Member member = memberRepository.save(SignUpRequest.toMember(request, friendCode));
+        return MemberResponse.toMember(member);
 
     }
 
