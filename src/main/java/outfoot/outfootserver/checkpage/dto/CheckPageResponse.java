@@ -21,7 +21,7 @@ public record CheckPageResponse(
                 .title(checkPage.getTitle())
                 .intro(checkPage.getIntro())
                 .createdAt(checkPage.getCreatedAt())
-                .animalPosition(checkPage.getAnimalPosition())
+                .animalPosition(checkPage.getConfirms().size())
                 .animal(checkPage.getAnimal())
                 .build();
     }

@@ -8,20 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.friend.dto.AddFriendRequest;
-import outfoot.outfootserver.friend.dto.FriendListResponse;
-import outfoot.outfootserver.friend.exception.AuthErrorCode;
-import outfoot.outfootserver.friend.exception.AuthException;
-import outfoot.outfootserver.friend.repository.FriendRepository;
+import outfoot.outfootserver.friend.dto.FriendCountListResponse;
 import outfoot.outfootserver.friend.service.FriendService;
 import outfoot.outfootserver.member.domain.Member;
-import outfoot.outfootserver.member.repository.MemberRepository;
-
-import java.util.List;
+import outfoot.outfootserver.member.service.MemberService;
 
 @RestController
 @RequestMapping("/friends")
@@ -29,13 +22,13 @@ import java.util.List;
 @Tag(name="친구 CRUD", description = "Friend API")
 public class FriendController {
     private final FriendService friendService;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @PostMapping("/{member_id}")
     @Operation(summary = "친구 추가")
     @Parameters({
+            @Parameter(name = "member_id", example = "1"),
             @Parameter(name = "code", description = "친구 코드", example = "ABC"),
-            @Parameter(name = "member_id", example = "1")
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "친구 추가에 성공하였습니다."),
@@ -45,31 +38,39 @@ public class FriendController {
     })
     public BasicResponse<String> addFriends (@Valid @RequestParam("code") String searchCode, @PathVariable("member_id") Long memberId ){
         //toMember = 친추를 받은(친구) , fromMember = 친추를 한(본인)
-        Member toMember = friendService.searchFriend(searchCode);
-        Member fromMember = memberRepository.findById(memberId).orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
+        Member toMember = memberService.searchFriend(searchCode);
+        Member fromMember = memberService.loadMember(memberId);
         friendService.addFriend(fromMember, toMember);
-        return ResponseUtil.success("친구 추가 성공: "+fromMember.getId());
+        return ResponseUtil.success("친구 추가 성공: " + fromMember.getId() + " -> " + toMember.getId());
     }
 
-//    @DeleteMapping("/{friend_id}")
-//    public BasicResponse<String> deleteFriends(@PathVariable Long friendId) {
-//        friendService.deleteFriend(friendId);
-//        return ResponseUtil.success("친구 삭제 성공");
-//    }
-    
-    @GetMapping
-    @Operation(summary = "친구 조회")
+    @DeleteMapping("/{friend_id}")
+    @Operation(summary = "친구 추가")
     @Parameters({
-            @Parameter(name = "code", description = "친구 코드", example = "ABC")
+            @Parameter(name = "friend_id", example = "1"),
     })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "친구 검색에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+            @ApiResponse(responseCode = "200", description = "친구 삭제에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 친구입니다."),
     })
-    public BasicResponse<String> searchFriends(@Valid @RequestParam("code") String searchCode) {
-        Member member = friendService.searchFriend(searchCode);
-        return ResponseUtil.success("친구 검색 성공: "+ member.getId());
+    public BasicResponse<String> deleteFriends(@PathVariable Long friend_id) {
+        friendService.deleteFriend(friend_id);
+        return ResponseUtil.success("친구 삭제 성공");
     }
+    
+//    @GetMapping
+//    @Operation(summary = "친구 조회")
+//    @Parameters({
+//            @Parameter(name = "code", description = "친구 코드", example = "ABC")
+//    })
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "친구 검색에 성공하였습니다."),
+//            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+//    })
+//    public BasicResponse<String> searchFriends(@Valid @RequestParam("code") String searchCode) {
+//        Member member = memberService.searchFriend(searchCode);
+//        return ResponseUtil.success("친구 검색 성공: "+ member.getId());
+//    }
 
     @Operation(summary = "친구 전체 조회")
     @GetMapping("/{member_id}")
@@ -79,9 +80,9 @@ public class FriendController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "친구 전체 조회에 성공하였습니다."),
     })
-    public BasicResponse<List<FriendListResponse>> findAllFriend(@PathVariable(name = "member_id") Long memberId){
-        List<FriendListResponse> friends = friendService.findAllFriend(memberId);
-        return ResponseUtil.success(friends);
+    public BasicResponse<FriendCountListResponse> findAllFriend(@PathVariable(name = "member_id") Long memberId){
+        memberService.loadMember(memberId);
+        return ResponseUtil.success(friendService.findAllFriend(memberId));
     }
 
 }

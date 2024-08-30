@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.common.BaseTimeEntity;
+import outfoot.outfootserver.confirm.domain.Confirm;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,24 +23,19 @@ public class CheckPage extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id", nullable = false)
-//    private Member member;
-
     @NotBlank
     private String title;
 
     private String intro;
 
-    private int animalPosition = 1;
-
     @NotNull
     private String animal;
 
+    @OneToMany(mappedBy = "checkPage", cascade = CascadeType.REMOVE)
+    private List<Confirm> confirms = new ArrayList<>();
+
     @Builder
-//    public CheckPage(Member member, String title, String intro, Animal animal) {
     public CheckPage(String title, String intro, String animal) {
-//        this.member = member;
         this.title = title;
         this.intro = intro;
         this.animal = animal;
