@@ -34,11 +34,11 @@ public class Member extends BaseTimeEntity {
     private String username;
 
     //@NotNull
-    @Column(unique = true)
+    @Column(unique = false)
     private String nickname;
 
     //@NotNull
-    @Column(unique = true)
+    @Column(unique = false)
     private String email;
 
     // @NotNull
