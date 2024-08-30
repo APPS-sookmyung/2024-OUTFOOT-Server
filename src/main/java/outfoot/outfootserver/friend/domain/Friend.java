@@ -21,12 +21,12 @@ public class Friend extends BaseTimeEntity {
     @Column(unique = true)
     private String nickname;
 
-    @ManyToOne
-    @JoinColumn(name = "from_member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_member_id", nullable = false)
     private Member fromMember;
 
-    @ManyToOne
-    @JoinColumn(name = "to_member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_member_id", nullable = false)
     private Member toMember;
 
     @Builder

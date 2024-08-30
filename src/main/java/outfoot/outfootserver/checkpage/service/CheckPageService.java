@@ -5,18 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.Animal;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
+import outfoot.outfootserver.checkpage.dto.CheckPageCountListDto;
 import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
-import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.member.domain.Member;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -26,27 +23,26 @@ public class CheckPageService {
     private final CheckPageRepository checkPageRepository;
 
     @Transactional
-//    public Long saveCheckPage (Member member, CheckPageRequest dto) {
     public CheckPageResponse saveCheckPage (CheckPageRequest dto) {
 
         // animal_type 찾았는데 없으면 오류 (Animal 클래스 예외 전파), 있으면 Animal 반환
         Animal animal = Animal.of(dto.animalId());
 
-
-//        CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(member, dto));
         CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName()));
 
         return CheckPageResponse.toCheckPage(checkPage);
 
     }
 
-    public List<CheckPageListResponse> findAllCheckPage() {
+    public CheckPageCountListDto findAllCheckPage() {
         List<CheckPage> checkPageList = checkPageRepository.findAll();
 
         // 엔티티 -> DTO
-        return checkPageList.stream()
+        List<CheckPageListResponse> checkPageDtoList = checkPageList.stream()
                 .map(CheckPageListResponse::toCheckPageList)
                 .toList();
+
+        return new CheckPageCountListDto(checkPageRepository.count(), checkPageDtoList);
     }
 
     public CheckPageResponse findCheckPage(Long checkPageId) {

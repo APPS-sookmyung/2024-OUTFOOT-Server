@@ -1,8 +1,6 @@
 package outfoot.outfootserver.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,20 +9,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.member.domain.Member;
-import outfoot.outfootserver.member.dto.MemberResponse;
-import outfoot.outfootserver.member.dto.SignUpRequest;
+import outfoot.outfootserver.member.dto.*;
 import outfoot.outfootserver.member.service.MemberService;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "회원가입", description = "Member API")
 public class MemberController {
+
+    private final MemberService memberService;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
@@ -37,7 +30,24 @@ public class MemberController {
         return ResponseUtil.success(member);
     }
 
-    private final MemberService memberService;
-    // 내 정보 확인
-    // BasicResponse로 감싸주기
+    @PutMapping("/my/{member_id}")
+    @Operation(summary = "프로필 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+    })
+    public BasicResponse<MyPageResponse> UpdateMyPage (@Valid @ModelAttribute MyPageRequest dto, @PathVariable(name = "member_id") Long memberId) {
+        MyPageResponse member = memberService.update(dto, memberId);
+        return ResponseUtil.success(member);
+    }
+
+    @GetMapping("/my/{id}")
+    @Operation(summary = "내 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내 정보 조회에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+    })
+    public BasicResponse<MyProfileResponse> MyProfile (@PathVariable Long id) {
+        return ResponseUtil.success(memberService.findMyInfo(id));
+    }
 }
