@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import outfoot.outfootserver.files.TestFileUploader;
 import outfoot.outfootserver.member.domain.Member;
-import outfoot.outfootserver.member.dto.MemberResponse;
-import outfoot.outfootserver.member.dto.MyPageRequest;
-import outfoot.outfootserver.member.dto.MyPageResponse;
-import outfoot.outfootserver.member.dto.SignUpRequest;
+import outfoot.outfootserver.member.dto.*;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
 import outfoot.outfootserver.member.exception.AuthException;
 import outfoot.outfootserver.member.repository.MemberRepository;
@@ -101,5 +98,14 @@ public class MemberService {
     public Member loadMember(Long member_id) {
         return memberRepository.findById(member_id)
                 .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public MyProfileResponse findMyInfo(Long id) {
+        Member member = loadMember(id);
+        return MyProfileResponse.builder()
+                .name(member.getNickname())
+                .myIntro(member.getMyIntro())
+                .code(member.getCode())
+                .build();
     }
 }
