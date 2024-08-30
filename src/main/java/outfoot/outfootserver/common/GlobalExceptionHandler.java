@@ -14,6 +14,8 @@ import outfoot.outfootserver.common.response.ErrorEntity;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.emotion.exception.EmotionException;
+import outfoot.outfootserver.friend.domain.Friend;
+import outfoot.outfootserver.friend.exception.FriendException;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
 import outfoot.outfootserver.member.exception.AuthException;
 
@@ -59,6 +61,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BasicResponse<ErrorEntity> EmotionInvalidRequestException(EmotionException e){
         log.error("Emotion Invalid Request({})={}", e.getCode(), e.getMessage());
+        return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(FriendException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BasicResponse<ErrorEntity> friendBadRequestException(FriendException e){
+        log.error("Friend Not Found({})={}", e.getCode(), e.getMessage());
         return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
     }
 

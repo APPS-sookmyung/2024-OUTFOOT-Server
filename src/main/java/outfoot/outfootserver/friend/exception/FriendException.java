@@ -1,5 +1,8 @@
 package outfoot.outfootserver.friend.exception;
 
+import lombok.Getter;
+
+@Getter
 public class FriendException extends RuntimeException {
     private final FriendErrorCode code;
     private final String message;

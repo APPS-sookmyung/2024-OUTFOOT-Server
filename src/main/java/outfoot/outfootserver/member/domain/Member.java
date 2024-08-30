@@ -57,6 +57,7 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true)
     private String code;
 
+    @Column
     private String myIntro;
 
     private String imageUrl;

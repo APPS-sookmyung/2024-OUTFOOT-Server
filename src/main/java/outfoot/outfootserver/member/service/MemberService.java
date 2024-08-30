@@ -106,6 +106,7 @@ public class MemberService {
                 .name(member.getNickname())
                 .myIntro(member.getMyIntro())
                 .code(member.getCode())
+                .friendCount(member.getFromMember().size())
                 .build();
     }
 }
