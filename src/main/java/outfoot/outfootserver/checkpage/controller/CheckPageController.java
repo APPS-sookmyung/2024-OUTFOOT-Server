@@ -10,14 +10,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.checkpage.dto.CheckPageCountListDto;
-import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/checkpages")
