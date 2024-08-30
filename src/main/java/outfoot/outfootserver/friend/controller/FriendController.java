@@ -8,22 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.friend.dto.AddFriendRequest;
 import outfoot.outfootserver.friend.dto.FriendCountListResponse;
-import outfoot.outfootserver.friend.dto.FriendListResponse;
-import outfoot.outfootserver.friend.exception.AuthErrorCode;
-import outfoot.outfootserver.friend.exception.AuthException;
-import outfoot.outfootserver.friend.repository.FriendRepository;
 import outfoot.outfootserver.friend.service.FriendService;
 import outfoot.outfootserver.member.domain.Member;
-import outfoot.outfootserver.member.repository.MemberRepository;
 import outfoot.outfootserver.member.service.MemberService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/friends")
@@ -59,19 +50,19 @@ public class FriendController {
         return ResponseUtil.success("친구 삭제 성공");
     }
     
-    @GetMapping
-    @Operation(summary = "친구 조회")
-    @Parameters({
-            @Parameter(name = "code", description = "친구 코드", example = "ABC")
-    })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "친구 검색에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
-    })
-    public BasicResponse<String> searchFriends(@Valid @RequestParam("code") String searchCode) {
-        Member member = memberService.searchFriend(searchCode);
-        return ResponseUtil.success("친구 검색 성공: "+ member.getId());
-    }
+//    @GetMapping
+//    @Operation(summary = "친구 조회")
+//    @Parameters({
+//            @Parameter(name = "code", description = "친구 코드", example = "ABC")
+//    })
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "친구 검색에 성공하였습니다."),
+//            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+//    })
+//    public BasicResponse<String> searchFriends(@Valid @RequestParam("code") String searchCode) {
+//        Member member = memberService.searchFriend(searchCode);
+//        return ResponseUtil.success("친구 검색 성공: "+ member.getId());
+//    }
 
     @Operation(summary = "친구 전체 조회")
     @GetMapping("/{member_id}")

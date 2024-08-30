@@ -8,8 +8,8 @@ import outfoot.outfootserver.friend.domain.Friend;
 import outfoot.outfootserver.friend.dto.AddFriendRequest;
 import outfoot.outfootserver.friend.dto.FriendCountListResponse;
 import outfoot.outfootserver.friend.dto.FriendListResponse;
-import outfoot.outfootserver.friend.exception.AuthErrorCode;
-import outfoot.outfootserver.friend.exception.AuthException;
+import outfoot.outfootserver.friend.exception.FriendErrorCode;
+import outfoot.outfootserver.friend.exception.FriendException;
 import outfoot.outfootserver.friend.repository.FriendRepository;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.repository.MemberRepository;
@@ -26,11 +26,11 @@ public class FriendService {
     public void addFriend(Member fromMember, Member toMember){
 
         if (fromMember.equals(toMember))
-            throw new AuthException(AuthErrorCode.NOT_FRINED_SELF);
+            throw new FriendException(FriendErrorCode.NOT_FRIEND_SELF);
 
         friendRepository.findFriend(fromMember, toMember)
                 .ifPresent(e -> {
-                    throw new AuthException(AuthErrorCode.FRIEND_DUPLICATED);
+                    throw new FriendException(FriendErrorCode.FRIEND_DUPLICATED);
                 });
 
         Friend newFriend = AddFriendRequest.toFriend(fromMember, toMember);
@@ -40,7 +40,7 @@ public class FriendService {
     @Transactional
     public  void deleteFriend(Long friendId) { // TODO: 친구 테이블 내 값도 삭제 필요
         Friend friend = friendRepository.findById(friendId)
-                .orElseThrow(() -> new AuthException(AuthErrorCode.FRIEND_NOT_FOUND));
+                .orElseThrow(() -> new FriendException(FriendErrorCode.FRIEND_NOT_FOUND));
 
         friendRepository.delete(friend);
     }

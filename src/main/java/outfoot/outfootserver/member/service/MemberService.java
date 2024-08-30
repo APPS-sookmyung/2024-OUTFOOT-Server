@@ -5,7 +5,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import outfoot.outfootserver.files.FileUploader;
 import outfoot.outfootserver.files.TestFileUploader;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.MemberResponse;
@@ -95,7 +94,7 @@ public class MemberService {
 
     public Member searchFriend(String searchCode) {
         return memberRepository.findByCode(searchCode)
-                .orElseThrow(()->new outfoot.outfootserver.friend.exception.AuthException(outfoot.outfootserver.friend.exception.AuthErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
     }
 
     // TODO: 로그인 기능 구현 시 리턴 값 수정 필요
