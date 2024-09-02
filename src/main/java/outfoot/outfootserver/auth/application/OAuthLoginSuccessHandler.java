@@ -104,9 +104,6 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("username", member.getUsername());
-        responseBody.put("nickname", member.getNickname());
-        responseBody.put("email", member.getEmail());
-        responseBody.put("password", member.getPassword());
         responseBody.put("code", member.getCode());
         responseBody.put("accesstoken", accessToken);
         responseBody.put("refreshtoken", refreshToken);

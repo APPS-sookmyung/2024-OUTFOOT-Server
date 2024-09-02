@@ -10,12 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
-import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
-import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +36,7 @@ class CheckPageServiceTest {
         dto = CheckPageRequest.builder()
                 .title("목표")
                 .intro("한 줄 소개")
-                .animalId("1")
+                .animalId(1)
                 .build();
     }
 

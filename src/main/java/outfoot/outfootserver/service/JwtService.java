@@ -7,9 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import outfoot.outfootserver.exception.TokenErrorResult;
+import outfoot.outfootserver.exception.TokenErrorCode;
 import outfoot.outfootserver.exception.TokenException;
-
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.UUID;
@@ -67,7 +66,7 @@ public class JwtService {
         }
         catch(JwtException | IllegalArgumentException e){
             log.warn("유효하지 않은 토큰입니다.");
-            throw new TokenException(TokenErrorResult.INVALID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -84,7 +83,7 @@ public class JwtService {
         }
         catch(JwtException | IllegalArgumentException e){
             log.warn("유효하지 않은 토큰");
-            throw new TokenException(TokenErrorResult.INVALID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_TOKEN);
         }
     }
 }

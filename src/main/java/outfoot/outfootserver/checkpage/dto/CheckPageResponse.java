@@ -2,11 +2,13 @@ package outfoot.outfootserver.checkpage.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 
 @Builder
 public record CheckPageResponse(
+        @Schema(description = "도장판 아이디", example = "1") @NotNull Long id,
         @Schema(description = "도장판 목표", example = "물 마시기") @NotBlank String title,
         @Schema(description = "도장판 목표", example = "하루에 한 잔 물 마시기") String intro,
         @Schema(description = "생성 일자", example = "2024-08-03 15:51:46") String createdAt,
@@ -15,10 +17,11 @@ public record CheckPageResponse(
 
     public static CheckPageResponse toCheckPage(CheckPage checkPage) {
         return CheckPageResponse.builder()
+                .id(checkPage.getId())
                 .title(checkPage.getTitle())
                 .intro(checkPage.getIntro())
                 .createdAt(checkPage.getCreatedAt())
-                .animalPosition(checkPage.getAnimalPosition())
+                .animalPosition(checkPage.getConfirms().size())
                 .animal(checkPage.getAnimal())
                 .build();
     }

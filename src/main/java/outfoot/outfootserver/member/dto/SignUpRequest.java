@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.member.domain.Member;
-import outfoot.outfootserver.member.service.MemberService;
 
 import java.util.UUID;
 
@@ -30,10 +29,15 @@ public class SignUpRequest {
     @NotBlank @Email
     private String email;
 
+    @Schema(description = "한 줄 소개", example = "안녕하세요")
+    private String myIntro;
+
     public static Member toMember(SignUpRequest dto, String friendCode) {
         return Member.builder()
                 .username(dto.username)
                 .nickname(dto.nickname)
+                .email(dto.email)
+                .myIntro(dto.myIntro)
                 .code(friendCode)
                 .build();
     }

@@ -10,7 +10,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.friend.domain.Friend;
+import outfoot.outfootserver.member.dto.MyPageRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.time.LocalDateTime;
@@ -29,11 +31,12 @@ public class Member extends BaseTimeEntity {
     @Column(name = "username", columnDefinition = "BINARY(16)", unique = true)
     private UUID username;
 
-    @NotNull @Column
+    //@NotNull
+    @Column(unique = true)
     private String nickname;
 
     //@NotNull
-    @Column(unique = true)
+    @Column
     private String email;
 
     // @NotNull
@@ -50,22 +53,46 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true)
     private String code;
 
+    @Column
     private String myIntro;
 
-    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
-    private List<Friend> fromMember;
+    private String imageUrl;
 
-    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
-    private List<Friend> toMember;
+
+    @OneToMany(mappedBy = "fromMember")
+    private List<Friend> fromMember = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toMember")
+    private List<Friend> toMember = new ArrayList<>();
 
     @Builder
-    public Member(UUID username, String nickname, String email, String password,String provider, String providerId, String code) {
+    public Member(UUID username, String nickname, String email, String myIntro, String password, String provider, String providerId, String code, String imageUrl) {
         this.username = username;
         this.nickname = nickname;
         this.email = email;
+        this.myIntro = myIntro;
         this.password = password;
         this.provider = provider;
         this.providerId = providerId;
         this.code = code;
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateMember(MyPageRequest dto, String imageUrl){
+        if ( dto.nickname() != null ) {
+            this.nickname = dto.nickname();
+        }
+        if ( dto.email() != null ) {
+            this.email = dto.email();
+        }
+        if ( dto.myIntro() != null ) {
+            this.myIntro = dto.myIntro();
+        }
+        if ( dto.password() != null ) {
+            this.password = dto.password();
+        }
+        if ( imageUrl != null ) {
+            this.imageUrl = imageUrl;
+        }
     }
 }
