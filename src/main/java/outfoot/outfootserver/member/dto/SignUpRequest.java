@@ -8,13 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.member.domain.Member;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignUpRequest {
 
     @Schema(description = "아이디", example = "ajung7038")
     @NotBlank
-    private String username;
+    private UUID username;
 
     @Schema(description = "닉네임", example = "ajung")
     private String nickname;
@@ -33,7 +35,6 @@ public class SignUpRequest {
     public static Member toMember(SignUpRequest dto, String friendCode) {
         return Member.builder()
                 .username(dto.username)
-                .password(dto.password)
                 .nickname(dto.nickname)
                 .email(dto.email)
                 .myIntro(dto.myIntro)

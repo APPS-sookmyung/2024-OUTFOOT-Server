@@ -13,11 +13,11 @@ import java.util.UUID;
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
-    @Query("SELECT u FROM RefreshToken u WHERE u.userId = :userId")
-    RefreshToken findByUserId(UUID userId);
+    @Query("SELECT u FROM RefreshToken u WHERE u.username = :username")
+    RefreshToken findByUsername(UUID username);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM RefreshToken u WHERE u.userId = :userId")
-    void deleteByUserId(@Param("userId")UUID userId);
+    @Query("DELETE FROM RefreshToken u WHERE u.username = :username")
+    void deleteByUsername(@Param("username")UUID username);
 }

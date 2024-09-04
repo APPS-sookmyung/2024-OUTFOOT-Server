@@ -19,7 +19,7 @@ public class RefreshToken {
     private Long id;
 
     @Column(name = "members_uuid", columnDefinition = "Binary(16)", unique = true)
-    private UUID userId;
+    private UUID username;
 
     @Column(name = "token", nullable = false)
     private String token;

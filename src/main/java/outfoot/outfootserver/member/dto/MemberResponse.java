@@ -17,7 +17,7 @@ public record MemberResponse(
 
     public static MemberResponse toMember(Member member){
         return MemberResponse.builder()
-                .username(member.getUsername())
+                .username(member.getUsername().toString())
                 .email(member.getEmail())
                 .code(member.getCode())
                 .build();

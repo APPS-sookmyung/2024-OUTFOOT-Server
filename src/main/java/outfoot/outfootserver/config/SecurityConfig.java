@@ -22,24 +22,11 @@ public class SecurityConfig {
     private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
     private final OAuthLoginFailureHandler oAuthLoginFailureHandler;
 
-    //CORS 설정
-    CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedHeaders(Collections.singletonList("*"));
-            config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList("*"));
-            config.setAllowCredentials(true);
-            return config;
-        };
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.
                 httpBasic(HttpBasicConfigurer::disable)
-                .cors(corsConfigure -> corsConfigure.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/**").permitAll()
