@@ -18,6 +18,8 @@ import outfoot.outfootserver.confirm.dto.ConfirmResponse;
 import outfoot.outfootserver.confirm.dto.ConfirmUpdateResponse;
 import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
 import outfoot.outfootserver.confirm.service.ConfirmService;
+import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.service.MemberService;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class ConfirmController {
 
     private final ConfirmService confirmService;
     private final CheckPageService checkPageService;
+    private final MemberService memberService;
     
     @PostMapping("/{check_page_id}")
     @Operation(summary = "인증판 저장")
@@ -38,9 +41,10 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
 //            @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
     })
-    public BasicResponse<ConfirmResponse> saveConfirm(@Valid @ModelAttribute ConfirmRequest dto, @PathVariable(name = "check_page_id") Long checkPageId) {
+    public BasicResponse<ConfirmResponse> saveConfirm(@Valid @ModelAttribute ConfirmRequest dto, @PathVariable(name = "check_page_id") Long checkPageId, @PathVariable("member_id") Long memberId) {
+        Member member = memberService.loadMember(memberId);
         CheckPage checkPage = checkPageService.findById(checkPageId);
-        ConfirmResponse confirm = confirmService.saveConfirm(checkPage, dto);
+        ConfirmResponse confirm = confirmService.saveConfirm(checkPage, dto, member);
         return ResponseUtil.success(confirm);
     }
 
@@ -53,8 +57,9 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @DeleteMapping("/{id}")
-    public BasicResponse<String> deleteConfirm(@PathVariable Long id){
-        confirmService.deleteConfirm(id);
+    public BasicResponse<String> deleteConfirm(@PathVariable("id") Long id, @PathVariable("member_id") Long memberId){
+        Member member = memberService.loadMember(memberId);
+        confirmService.deleteConfirm(id, member);
         return ResponseUtil.success("인증판 삭제 성공");
     }
 
@@ -68,9 +73,11 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @PutMapping("/{id}")
-    public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable Long id,
+    public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("Id") Long id,
+                                                           @PathVariable("member_id") Long memberId,
                                                            @ModelAttribute UpdateConfirmRequest dto){
-        return ResponseUtil.success(confirmService.updateConfirm(id, dto));
+        Member member = memberService.loadMember(memberId);
+        return ResponseUtil.success(confirmService.updateConfirm(id, dto, member));
     }
 
 
@@ -83,7 +90,9 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @GetMapping("/{id}")
-    public BasicResponse<ConfirmResponse> findConfirm(@PathVariable Long id){
-        return ResponseUtil.success(confirmService.findConfirm(id));
+    public BasicResponse<ConfirmResponse> findConfirm(@PathVariable("id") Long id,
+                                                      @PathVariable("member_id") Long memberId){
+        Member member = memberService.loadMember(memberId);
+        return ResponseUtil.success(confirmService.findConfirm(id, member));
     }
 }
