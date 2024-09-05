@@ -57,9 +57,9 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @DeleteMapping("/{id}/{member_id}")
-    public BasicResponse<String> deleteConfirm(@PathVariable("id") Long id, @PathVariable("member_id") Long memberId){
+    public BasicResponse<String> deleteConfirm(@PathVariable("id") Long confirmId, @PathVariable("member_id") Long memberId){
         Member member = memberService.loadMember(memberId);
-        confirmService.deleteConfirm(id, member);
+        confirmService.deleteConfirm(confirmId, member);
         return ResponseUtil.success("인증판 삭제 성공");
     }
 
@@ -73,7 +73,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
     @PutMapping("/{id}/{member_id}")
-    public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("Id") Long id,
+    public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("id") Long id,
                                                            @PathVariable("member_id") Long memberId,
                                                            @ModelAttribute UpdateConfirmRequest dto){
         Member member = memberService.loadMember(memberId);

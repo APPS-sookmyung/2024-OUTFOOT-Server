@@ -44,7 +44,7 @@ public class CheckPageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "도장판 전체 조회에 성공하였습니다."),
     })
-    
+
     public BasicResponse<CheckPageCountListDto> findAllCheckPage(@PathVariable("member_id") Long memberId) {
         Member member = memberService.loadMember(memberId);
         return ResponseUtil.success(checkPageService.findAllCheckPage(member));

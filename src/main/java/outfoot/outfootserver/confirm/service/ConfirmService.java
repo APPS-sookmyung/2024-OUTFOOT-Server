@@ -53,8 +53,8 @@ public class ConfirmService {
     }
 
     @Transactional
-    public ConfirmUpdateResponse updateConfirm(Long id, UpdateConfirmRequest dto, Member member) {
-        Confirm confirm = findByIdAndMember(id, member);
+    public ConfirmUpdateResponse updateConfirm(Long confirmId, UpdateConfirmRequest dto, Member member) {
+        Confirm confirm = findByIdAndMember(confirmId, member);
 
         String imageUrl = null;
         if (dto.image() != null && !dto.image().isEmpty()){
