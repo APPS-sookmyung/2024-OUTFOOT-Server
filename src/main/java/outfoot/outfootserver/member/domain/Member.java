@@ -28,7 +28,7 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", columnDefinition = "BINARY(16)", unique = true)
+    @Column(name = "username", unique = true)
     private UUID username;
 
     //@NotNull
