@@ -44,7 +44,7 @@ public class FriendController {
         return ResponseUtil.success("친구 추가 성공: " + fromMember.getId() + " -> " + toMember.getId());
     }
 
-    @DeleteMapping("/{friend_id}/{member_id}")
+    @DeleteMapping("/{member_id}/{friend_id}")
     @Operation(summary = "친구 추가")
     @Parameters({
             @Parameter(name = "friend_id", example = "1"),
@@ -53,9 +53,9 @@ public class FriendController {
             @ApiResponse(responseCode = "200", description = "친구 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 친구입니다."),
     })
-    public BasicResponse<String> deleteFriends(@PathVariable("friend_id") Long friendId, @PathVariable("member_id") Long memberId) {
+    public BasicResponse<String> deleteFriends( @PathVariable("member_id") Long memberId, @PathVariable("friend_id") Long friendId) {
         Member member = memberService.loadMember(memberId);
-        friendService.deleteFriend(friendId, member);
+        friendService.deleteFriend(member, friendId);
         return ResponseUtil.success("친구 삭제 성공");
     }
     
