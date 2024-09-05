@@ -13,11 +13,12 @@ public record CheckPageRequest(
         @Schema(description = "한 줄 소개", example = "하루에 한 잔 물 마시기") String intro,
         @Schema(description = "도장 메이트", example = "1") @NotNull int animalId) {
 
-    public static CheckPage toCheckPage(CheckPageRequest dto, String animal) {
+    public static CheckPage toCheckPage(CheckPageRequest dto, String animal, Member member) {
         return CheckPage.builder()
                 .title(dto.title())
                 .intro(dto.intro())
                 .animal(animal)
+                .member(member)
                 .build();
     }
 

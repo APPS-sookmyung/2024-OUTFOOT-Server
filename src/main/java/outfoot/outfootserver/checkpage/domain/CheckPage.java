@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.confirm.domain.Confirm;
+import outfoot.outfootserver.member.domain.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,18 @@ public class CheckPage extends BaseTimeEntity {
     @NotNull
     private String animal;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     @OneToMany(mappedBy = "checkPage", cascade = CascadeType.REMOVE)
     private List<Confirm> confirms = new ArrayList<>();
 
     @Builder
-    public CheckPage(String title, String intro, String animal) {
+    public CheckPage(String title, String intro, String animal, Member member) {
         this.title = title;
         this.intro = intro;
         this.animal = animal;
+        this.member = member;
     }
 }
