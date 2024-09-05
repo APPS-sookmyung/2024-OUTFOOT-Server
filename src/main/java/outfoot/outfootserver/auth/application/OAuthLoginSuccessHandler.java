@@ -16,6 +16,7 @@ import outfoot.outfootserver.auth.dto.NaverUserInfo;
 import outfoot.outfootserver.auth.dto.OAuth2UserInfo;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.repository.MemberRepository;
+import outfoot.outfootserver.member.service.MemberService;
 import outfoot.outfootserver.service.JwtService;
 import outfoot.outfootserver.token.domain.RefreshToken;
 import outfoot.outfootserver.token.repository.RefreshTokenRepository;
@@ -45,6 +46,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private  final MemberService memberService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException{
@@ -78,6 +80,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             member = Member.builder()
                     .username(UUID.randomUUID())
                     .nickname(name)
+                    .code(memberService.createCode())
                     .provider(provider)
                     .providerId(providerId)
                     .build();
