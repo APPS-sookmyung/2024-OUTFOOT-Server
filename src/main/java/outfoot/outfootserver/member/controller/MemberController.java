@@ -4,11 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
+import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.dto.*;
 import outfoot.outfootserver.member.service.MemberService;
 
@@ -49,5 +51,11 @@ public class MemberController {
     })
     public BasicResponse<MyProfileResponse> MyProfile (@PathVariable Long id) {
         return ResponseUtil.success(memberService.findMyInfo(id));
+    }
+
+    @GetMapping("/test/test")
+    public BasicResponse<Member> testTest (HttpServletRequest request) {
+//        System.out.println(request);
+        return ResponseUtil.success(memberService.loadMember(request));
     }
 }
