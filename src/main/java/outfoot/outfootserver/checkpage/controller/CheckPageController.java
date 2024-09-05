@@ -15,6 +15,8 @@ import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
+import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.service.MemberService;
 
 @RestController
 @RequestMapping("/checkpages")
@@ -22,6 +24,7 @@ import outfoot.outfootserver.common.response.ResponseUtil;
 @Tag(name = "도장판", description = "CheckPage API")
 public class CheckPageController {
     private final CheckPageService checkPageService;
+    private final MemberService memberService;
 
     @PostMapping
     @Operation(summary = "도장판 생성")
@@ -29,8 +32,9 @@ public class CheckPageController {
             @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "도장 메이트 번호를 찾을 수 없습니다."),
     })
-    public BasicResponse<CheckPageResponse> saveCheckPage(@Valid @RequestBody CheckPageRequest dto) {
-        CheckPageResponse checkPage = checkPageService.saveCheckPage(dto);
+    public BasicResponse<CheckPageResponse> saveCheckPage(@Valid @RequestBody CheckPageRequest dto, @PathVariable("member_id") Long memberId) {
+        Member member = memberService.loadMember(memberId);
+        CheckPageResponse checkPage = checkPageService.saveCheckPage(dto, member);
         return ResponseUtil.success(checkPage);
     }
 
@@ -40,8 +44,9 @@ public class CheckPageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "도장판 전체 조회에 성공하였습니다."),
     })
-    public BasicResponse<CheckPageCountListDto> findAllCheckPage() {
-        return ResponseUtil.success(checkPageService.findAllCheckPage());
+    public BasicResponse<CheckPageCountListDto> findAllCheckPage(@PathVariable("member_id") Long memberId) {
+        Member member = memberService.loadMember(memberId);
+        return ResponseUtil.success(checkPageService.findAllCheckPage(member));
     }
 
     @GetMapping("/{check_page_id}/foot")
@@ -53,8 +58,9 @@ public class CheckPageController {
             @ApiResponse(responseCode = "200", description = "도장판 단건 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
     })
-            public BasicResponse<CheckPageResponse>findOne(@PathVariable(name = "check_page_id") Long checkPageId) {
-        return ResponseUtil.success(checkPageService.findCheckPage(checkPageId));
+    public BasicResponse<CheckPageResponse> findOne(@PathVariable(name = "check_page_id") Long checkPageId, @PathVariable("member_id") Long memberId) {
+        Member member = memberService.loadMember(memberId);
+        return ResponseUtil.success(checkPageService.findCheckPage(checkPageId, member));
     }
 
     @DeleteMapping("/{check_page_id}")
@@ -66,8 +72,9 @@ public class CheckPageController {
             @ApiResponse(responseCode = "200", description = "도장판 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
     })
-    public BasicResponse<String> deleteCheckPage(@PathVariable(name = "check_page_id") Long checkPageId) {
-        Long id = checkPageService.deleteCheckPage(checkPageId);
+    public BasicResponse<String> deleteCheckPage(@PathVariable(name = "check_page_id") Long checkPageId, @PathVariable("member_id") Long memberId) {
+        Member member = memberService.loadMember(memberId);
+        Long id = checkPageService.deleteCheckPage(checkPageId, member);
         return ResponseUtil.success("목표 삭제에 성공하였습니다. checkPageId = " + id);
     }
 }
