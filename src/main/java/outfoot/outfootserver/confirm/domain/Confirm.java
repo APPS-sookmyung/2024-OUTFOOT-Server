@@ -10,6 +10,7 @@ import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.common.BaseTimeEntity;
 import outfoot.outfootserver.emotion.domain.Dislike;
 import outfoot.outfootserver.emotion.domain.Like;
+import outfoot.outfootserver.member.domain.Member;
 
 import java.util.*;
 
@@ -27,6 +28,10 @@ public class Confirm extends BaseTimeEntity {
     private String content;
 
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "check_page_id") //id
@@ -47,10 +52,11 @@ public class Confirm extends BaseTimeEntity {
     }
 
     @Builder
-    public Confirm(String title, String content, String imageUrl, CheckPage checkPage) {
+    public Confirm(String title, String content, String imageUrl, CheckPage checkPage, Member member) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
+        this.member = member;
         this.checkPage = checkPage;
     }
 
