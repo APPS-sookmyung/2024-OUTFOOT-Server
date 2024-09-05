@@ -1,15 +1,21 @@
 package outfoot.outfootserver.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import outfoot.outfootserver.exception.TokenErrorCode;
 import outfoot.outfootserver.exception.TokenException;
+import outfoot.outfootserver.member.service.MemberService;
+
 import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
@@ -49,19 +55,23 @@ public class JwtService {
                 .compact();
     }
 
-    public String getTokenFromHeader(String authorizationHeader){
-        return authorizationHeader.substring(7);
+    public String getTokenFromHeader(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        return getUsernameFromToken(authorization.substring(7));
     }
 
-    public String getUsernameFromToken(String token){
-        try{
+    private String getUsernameFromToken(String token){
+        try {
+            System.out.println(token);
             String username = Jwts.parser()
                     .verifyWith(this.getSigningKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
                     .get("username", String.class);
+
             log.info("유저 네임을 반환");
+            log.info(username);
             return username;
         }
         catch(JwtException | IllegalArgumentException e){
