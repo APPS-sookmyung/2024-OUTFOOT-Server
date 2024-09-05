@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class ConfirmController {
     private final CheckPageService checkPageService;
     private final MemberService memberService;
     
-    @PostMapping("/{check_page_id}/{member_id}")
+    @PostMapping("/{check_page_id}")
     @Operation(summary = "인증판 저장")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
@@ -41,8 +42,8 @@ public class ConfirmController {
             @ApiResponse(responseCode = "400", description = "도장판을 찾을 수 없습니다."),
 //            @ApiResponse(responseCode = "400", description = "하루 최대 인증판 개수를 초과하였습니다."),
     })
-    public BasicResponse<ConfirmResponse> saveConfirm(@Valid @ModelAttribute ConfirmRequest dto, @PathVariable(name = "check_page_id") Long checkPageId, @PathVariable("member_id") Long memberId) {
-        Member member = memberService.loadMember(memberId);
+    public BasicResponse<ConfirmResponse> saveConfirm(@Valid @ModelAttribute ConfirmRequest dto, @PathVariable(name = "check_page_id") Long checkPageId, HttpServletRequest request) {
+        Member member = memberService.loadMember(request);
         CheckPage checkPage = checkPageService.findById(checkPageId);
         ConfirmResponse confirm = confirmService.saveConfirm(checkPage, dto, member);
         return ResponseUtil.success(confirm);
@@ -56,9 +57,9 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @DeleteMapping("/{id}/{member_id}")
-    public BasicResponse<String> deleteConfirm(@PathVariable("id") Long confirmId, @PathVariable("member_id") Long memberId){
-        Member member = memberService.loadMember(memberId);
+    @DeleteMapping("/{id}")
+    public BasicResponse<String> deleteConfirm(@PathVariable("id") Long confirmId,HttpServletRequest request){
+        Member member = memberService.loadMember(request);
         confirmService.deleteConfirm(confirmId, member);
         return ResponseUtil.success("인증판 삭제 성공");
     }
@@ -72,11 +73,11 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PutMapping("/{id}/{member_id}")
+    @PutMapping("/{id}")
     public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("id") Long id,
-                                                           @PathVariable("member_id") Long memberId,
+                                                           HttpServletRequest request,
                                                            @ModelAttribute UpdateConfirmRequest dto){
-        Member member = memberService.loadMember(memberId);
+        Member member = memberService.loadMember(request);
         return ResponseUtil.success(confirmService.updateConfirm(id, dto, member));
     }
 
@@ -89,10 +90,10 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @GetMapping("/{id}/{member_id}")
+    @GetMapping("/{id}")
     public BasicResponse<ConfirmResponse> findConfirm(@PathVariable("id") Long id,
-                                                      @PathVariable("member_id") Long memberId){
-        Member member = memberService.loadMember(memberId);
+                                                      HttpServletRequest request){
+        Member member = memberService.loadMember(request);
         return ResponseUtil.success(confirmService.findConfirm(id, member));
     }
 }
