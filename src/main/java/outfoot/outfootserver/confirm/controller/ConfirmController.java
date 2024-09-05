@@ -31,7 +31,7 @@ public class ConfirmController {
     private final CheckPageService checkPageService;
     private final MemberService memberService;
     
-    @PostMapping("/{check_page_id}")
+    @PostMapping("/{check_page_id}/{member_id}")
     @Operation(summary = "인증판 저장")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1"),
@@ -56,7 +56,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 삭제에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/{member_id}")
     public BasicResponse<String> deleteConfirm(@PathVariable("id") Long id, @PathVariable("member_id") Long memberId){
         Member member = memberService.loadMember(memberId);
         confirmService.deleteConfirm(id, member);
@@ -72,7 +72,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/{member_id}")
     public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("Id") Long id,
                                                            @PathVariable("member_id") Long memberId,
                                                            @ModelAttribute UpdateConfirmRequest dto){
@@ -89,7 +89,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/{member_id}")
     public BasicResponse<ConfirmResponse> findConfirm(@PathVariable("id") Long id,
                                                       @PathVariable("member_id") Long memberId){
         Member member = memberService.loadMember(memberId);

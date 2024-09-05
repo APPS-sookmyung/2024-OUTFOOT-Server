@@ -93,4 +93,10 @@ public class ConfirmService {
         return confirmRepository.findByIdAndMember(confirmId, member)
                 .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
     }
+
+    public Confirm findById (Long confirmId) {
+        return confirmRepository.findById(confirmId)
+                .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
+
+    }
 }

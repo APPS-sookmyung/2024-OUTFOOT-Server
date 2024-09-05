@@ -65,4 +65,10 @@ public class CheckPageService {
         return checkPageRepository.findByIdAndMember(checkPageId, member)
                 .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
     }
+
+    public CheckPage findById(Long checkPageId) {
+        return checkPageRepository.findById(checkPageId)
+                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
+
+    }
 }

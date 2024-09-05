@@ -44,7 +44,7 @@ public class FriendController {
         return ResponseUtil.success("친구 추가 성공: " + fromMember.getId() + " -> " + toMember.getId());
     }
 
-    @DeleteMapping("/{friend_id}")
+    @DeleteMapping("/{friend_id}/{member_id}")
     @Operation(summary = "친구 추가")
     @Parameters({
             @Parameter(name = "friend_id", example = "1"),

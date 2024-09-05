@@ -26,7 +26,7 @@ public class CheckPageController {
     private final CheckPageService checkPageService;
     private final MemberService memberService;
 
-    @PostMapping
+    @PostMapping("/{member_id}")
     @Operation(summary = "도장판 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
@@ -39,7 +39,7 @@ public class CheckPageController {
     }
 
 
-    @GetMapping
+    @GetMapping("/{member_id}")
     @Operation(summary = "도장판 전체 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "도장판 전체 조회에 성공하였습니다."),
@@ -49,7 +49,7 @@ public class CheckPageController {
         return ResponseUtil.success(checkPageService.findAllCheckPage(member));
     }
 
-    @GetMapping("/{check_page_id}/foot")
+    @GetMapping("/{check_page_id}/{member_id}/foot")
     @Operation(summary = "도장판 단건 조회")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1")
@@ -63,7 +63,7 @@ public class CheckPageController {
         return ResponseUtil.success(checkPageService.findCheckPage(checkPageId, member));
     }
 
-    @DeleteMapping("/{check_page_id}")
+    @DeleteMapping("/{check_page_id}/{member_id}")
     @Operation(summary = "도장판 삭제")
     @Parameters({
             @Parameter(name = "check_page_id", description = "공백 X", example = "1")

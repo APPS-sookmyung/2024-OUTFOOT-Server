@@ -38,10 +38,10 @@ public class FriendService {
 
     @Transactional
     public  void deleteFriend(Long friendId, Member member ) { // TODO: 친구 테이블 내 값도 삭제 필요
-        Friend friend = friendRepository.findByIdAndMember(friendId, member)
+        Friend friend = friendRepository.findByIdAndFromMember(friendId, member)
                 .orElseThrow(() -> new FriendException(FriendErrorCode.FRIEND_NOT_FOUND));
 
-        friendRepository.delete(friend);
+        friendRepository.delete(friend);;
     }
 
     public FriendCountListResponse findAllFriend(Long memberId){
