@@ -17,7 +17,6 @@ public class Friend extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long friendId;
 
-
     @Column(unique = true)
     private String nickname;
 
