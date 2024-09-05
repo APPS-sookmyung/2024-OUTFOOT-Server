@@ -70,16 +70,6 @@ public class JwtService {
                     .getPayload()
                     .get("username", String.class);
 
-//            String username = Jwts.parser()
-//                    .verifyWith(this.getSigningKey())
-//                    .build()
-//                    .parseSignedClaims(token)
-//                    .getPayload()
-//                    .get("username", String.class);
-
-//            Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody()
-
-
             log.info("유저 네임을 반환");
             log.info(username);
             return username;
