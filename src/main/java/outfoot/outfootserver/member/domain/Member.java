@@ -32,7 +32,7 @@ public class Member extends BaseTimeEntity {
     private UUID username;
 
     //@NotNull
-    @Column(unique = true)
+    @Column
     private String nickname;
 
     //@NotNull
