@@ -52,15 +52,18 @@ public class JwtService {
                 .claim("username", username.toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .signWith(this.getSigningKey())
                 .compact();
     }
 
     public String getTokenFromHeader(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        return getUsernameFromToken(authorization.substring(7));
+        String token = authorization.substring(7);
+        log.info(token);
+        return token;
     }
 
-    private String getUsernameFromToken(String token){
+    public String getUsernameFromToken(String token){
         try {
             System.out.println(token);
             String username = Jwts.parser()
