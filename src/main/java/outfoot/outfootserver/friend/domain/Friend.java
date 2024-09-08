@@ -15,8 +15,7 @@ public class Friend extends BaseTimeEntity {
 
     @Id @Column(name = "friend_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long friendId;
-
+    private Long id;
 
     @Column(unique = true)
     private String nickname;

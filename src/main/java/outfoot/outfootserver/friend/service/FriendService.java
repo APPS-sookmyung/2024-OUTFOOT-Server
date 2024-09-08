@@ -12,6 +12,8 @@ import outfoot.outfootserver.friend.exception.FriendErrorCode;
 import outfoot.outfootserver.friend.exception.FriendException;
 import outfoot.outfootserver.friend.repository.FriendRepository;
 import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.exception.AuthErrorCode;
+import outfoot.outfootserver.member.exception.AuthException;
 import outfoot.outfootserver.member.repository.MemberRepository;
 
 import java.util.List;
@@ -37,11 +39,13 @@ public class FriendService {
     }
 
     @Transactional
-    public  void deleteFriend(Long friendId) { // TODO: 친구 테이블 내 값도 삭제 필요
-        Friend friend = friendRepository.findById(friendId)
+    public  void deleteFriend(Member member, Long friendId) { // TODO: 친구 테이블 내 값도 삭제 필요
+        Friend friend = friendRepository.findByFromMemberAndId(member, friendId)
                 .orElseThrow(() -> new FriendException(FriendErrorCode.FRIEND_NOT_FOUND));
-
-        friendRepository.delete(friend);
+        if (friend.getFromMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
+        friendRepository.delete(friend);;
     }
 
     public FriendCountListResponse findAllFriend(Long memberId){
@@ -53,4 +57,6 @@ public class FriendService {
 
         return new FriendCountListResponse(friendList.size(), friendLists);
     }
+
+
 }

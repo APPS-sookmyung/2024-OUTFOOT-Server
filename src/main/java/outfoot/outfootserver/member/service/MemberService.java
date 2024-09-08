@@ -1,5 +1,6 @@
 package outfoot.outfootserver.member.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import outfoot.outfootserver.member.dto.*;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
 import outfoot.outfootserver.member.exception.AuthException;
 import outfoot.outfootserver.member.repository.MemberRepository;
+import outfoot.outfootserver.service.JwtService;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -23,6 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final TestFileUploader fileUploader;
     private final String path = "member/";
+    private final JwtService jwtService;
 
     @Transactional // 데이터 변경이 있는 곳에는 Transactional 다시 걸어줘야 함
     public MemberResponse save(SignUpRequest request) {
@@ -43,8 +46,8 @@ public class MemberService {
     }
 
     @Transactional
-    public MyPageResponse update(MyPageRequest dto, Long memberId){
-        Member member = loadMember(memberId);
+    public MyPageResponse update(MyPageRequest dto, HttpServletRequest request){
+        Member member = loadMember(request);
         String originImageUrl = member.getImageUrl();
 
         String imageUrl = null;
@@ -100,8 +103,16 @@ public class MemberService {
                 .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
     }
 
-    public MyProfileResponse findMyInfo(Long id) {
-        Member member = loadMember(id);
+    public Member loadMember(HttpServletRequest header) {
+        String token = jwtService.getTokenFromHeader(header);
+        UUID username = UUID.fromString(jwtService.getUsernameFromToken(token));
+//        System.out.println(jwtService.getTokenFromHeader(header));
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public MyProfileResponse findMyInfo(HttpServletRequest request) {
+        Member member = loadMember(request);
         return MyProfileResponse.builder()
                 .name(member.getNickname())
                 .myIntro(member.getMyIntro())

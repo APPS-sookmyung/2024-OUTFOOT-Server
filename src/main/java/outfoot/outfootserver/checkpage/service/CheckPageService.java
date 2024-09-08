@@ -12,6 +12,9 @@ import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
+import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.exception.AuthErrorCode;
+import outfoot.outfootserver.member.exception.AuthException;
 
 import java.util.List;
 
@@ -23,19 +26,21 @@ public class CheckPageService {
     private final CheckPageRepository checkPageRepository;
 
     @Transactional
-    public CheckPageResponse saveCheckPage (CheckPageRequest dto) {
+    public CheckPageResponse saveCheckPage (CheckPageRequest dto, Member member) {
 
         // animal_type 찾았는데 없으면 오류 (Animal 클래스 예외 전파), 있으면 Animal 반환
         Animal animal = Animal.of(dto.animalId());
 
-        CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName()));
+        CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName(), member));
 
         return CheckPageResponse.toCheckPage(checkPage);
 
     }
 
-    public CheckPageCountListDto findAllCheckPage() {
-        List<CheckPage> checkPageList = checkPageRepository.findAll();
+    public CheckPageCountListDto findAllCheckPage(Member member) {
+
+//        여기만 하면 됨
+        List<CheckPage> checkPageList = checkPageRepository.findAllById(member);
 
         // 엔티티 -> DTO
         List<CheckPageListResponse> checkPageDtoList = checkPageList.stream()
@@ -52,8 +57,12 @@ public class CheckPageService {
 
 
     @Transactional
-    public Long deleteCheckPage(Long checkPageId) {
+    public Long deleteCheckPage(Long checkPageId, Member member) {
         CheckPage checkPage = findById(checkPageId);
+
+        if (checkPage.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
         checkPageRepository.delete(checkPage);
         return checkPageId;
     }

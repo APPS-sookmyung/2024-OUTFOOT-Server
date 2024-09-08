@@ -28,14 +28,11 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "users_uuid", columnDefinition = "BINARY(16)", unique = true)
-    private UUID userId;
-
-    @NotNull @Column
-    private String username;
+    @Column(name = "username", unique = true)
+    private UUID username;
 
     //@NotNull
-    @Column(unique = true)
+    @Column
     private String nickname;
 
     //@NotNull
@@ -45,8 +42,7 @@ public class Member extends BaseTimeEntity {
     // @NotNull
     private String password;
 
-    //    @Column(name = "provider", nullable = false, length = 10)
-    @Column(name = "provider", length = 10)
+     @Column(name = "provider", nullable = false, length = 10)
     private String provider;
 
 //    @Column(name = "provider_id", nullable = false, length = 50)
@@ -70,8 +66,7 @@ public class Member extends BaseTimeEntity {
     private List<Friend> toMember = new ArrayList<>();
 
     @Builder
-    public Member(UUID userId, String username, String nickname, String email, String myIntro, String password, String provider, String providerId, String code, String imageUrl) {
-        this.userId = userId;
+    public Member(UUID username, String nickname, String email, String myIntro, String password, String provider, String providerId, String code, String imageUrl) {
         this.username = username;
         this.nickname = nickname;
         this.email = email;

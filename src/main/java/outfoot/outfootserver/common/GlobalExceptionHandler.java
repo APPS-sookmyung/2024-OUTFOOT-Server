@@ -14,6 +14,7 @@ import outfoot.outfootserver.common.response.ErrorEntity;
 import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.emotion.exception.EmotionException;
+import outfoot.outfootserver.exception.TokenException;
 import outfoot.outfootserver.friend.domain.Friend;
 import outfoot.outfootserver.friend.exception.FriendException;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
@@ -85,5 +86,12 @@ public class GlobalExceptionHandler {
         }
         log.error("Data Intergrity Violation: {}", e.getMessage());
         return ResponseUtil.error(new ErrorEntity("DATA_INTERGRITY_VIOLATION", "data intergrity violation occured."));
+    }
+
+    @ExceptionHandler(TokenException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public BasicResponse<ErrorEntity> InvalidTokenException(TokenException e){
+        log.error("Invalid Token Exception ({})={}", e.getCode(), e.getMessage());
+        return ResponseUtil.error(new ErrorEntity(e.getCode().toString(), e.getMessage()));
     }
 }
