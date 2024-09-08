@@ -32,25 +32,25 @@ public class MemberController {
         return ResponseUtil.success(member);
     }
 
-    @PutMapping("/my/{member_id}")
+    @PutMapping("/my")
     @Operation(summary = "프로필 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
     })
-    public BasicResponse<MyPageResponse> UpdateMyPage (@Valid @ModelAttribute MyPageRequest dto, @PathVariable(name = "member_id") Long memberId) {
-        MyPageResponse member = memberService.update(dto, memberId);
+    public BasicResponse<MyPageResponse> UpdateMyPage (@Valid @ModelAttribute MyPageRequest dto, HttpServletRequest request) {
+        MyPageResponse member = memberService.update(dto, request);
         return ResponseUtil.success(member);
     }
 
-    @GetMapping("/my/{id}")
+    @GetMapping("/my")
     @Operation(summary = "내 정보 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 정보 조회에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
     })
-    public BasicResponse<MyProfileResponse> MyProfile (@PathVariable Long id) {
-        return ResponseUtil.success(memberService.findMyInfo(id));
+    public BasicResponse<MyProfileResponse> MyProfile (HttpServletRequest request) {
+        return ResponseUtil.success(memberService.findMyInfo(request));
     }
 
     @GetMapping("/test/test")
