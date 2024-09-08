@@ -15,6 +15,8 @@ import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.files.TestFileUploader;
 import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.exception.AuthErrorCode;
+import outfoot.outfootserver.member.exception.AuthException;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +78,9 @@ public class ConfirmService {
 
         if (confirm.getImageUrl() != null) {
             fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
+        }
+        if (confirm.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
         confirmRepository.delete(confirm);
     }
