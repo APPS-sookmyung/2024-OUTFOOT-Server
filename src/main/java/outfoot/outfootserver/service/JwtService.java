@@ -52,19 +52,20 @@ public class JwtService {
                 .claim("username", username.toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .signWith(this.getSigningKey())
                 .compact();
     }
 
     public String getTokenFromHeader(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             throw new TokenException(TokenErrorCode.NOT_FOUND_TOKEN);
         }
-        return getUsernameFromToken(authorization.substring(7));
+        String token = authorization.substring(7);
+        return token;
     }
 
-    private String getUsernameFromToken(String token){
+    public String getUsernameFromToken(String token){
         try {
             System.out.println(token);
             String username = Jwts.parser()

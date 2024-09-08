@@ -104,7 +104,8 @@ public class MemberService {
     }
 
     public Member loadMember(HttpServletRequest header) {
-        UUID username = UUID.fromString(jwtService.getTokenFromHeader(header));
+        String token = jwtService.getTokenFromHeader(header);
+        UUID username = UUID.fromString(jwtService.getUsernameFromToken(token));
 //        System.out.println(jwtService.getTokenFromHeader(header));
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
