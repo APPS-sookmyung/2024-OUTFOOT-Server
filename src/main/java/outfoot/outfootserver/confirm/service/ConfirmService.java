@@ -87,6 +87,9 @@ public class ConfirmService {
         if (confirm.getImageUrl() != null) {
             fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
         }
+        if (confirm.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
         confirmRepository.delete(confirm);
     }
 
