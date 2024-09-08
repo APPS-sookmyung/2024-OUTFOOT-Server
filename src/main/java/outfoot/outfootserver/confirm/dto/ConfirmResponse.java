@@ -26,6 +26,7 @@ public record ConfirmResponse(
                 .likeCount(likeCount)
                 .dislikeCount(dislikeCount)
                 .imageUrl(imageUrl)
+
                 .build();
     }
 }
