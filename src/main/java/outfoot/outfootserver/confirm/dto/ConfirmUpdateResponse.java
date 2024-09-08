@@ -12,12 +12,13 @@ import java.util.Date;
 public record ConfirmUpdateResponse(
         @Schema(description = "제목", example = "하루에 물 2리터 마시기") String title,
         @Schema(description = "한 줄 소개", example = "건강한 이너뷰티") String intro,
-        @Schema(description = "이미지", example = "image/png") MultipartFile image) {
+        @Schema(description = "이미지", example = "image/png") String imageUrl) {
 
     public static ConfirmUpdateResponse toConfirm(Confirm confirm){
         return ConfirmUpdateResponse.builder()
                 .title(confirm.getTitle())
                 .intro(confirm.getContent())
+                .imageUrl(confirm.getImageUrl())
                 .build();
     }
 
