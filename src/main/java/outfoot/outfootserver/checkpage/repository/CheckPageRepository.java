@@ -13,6 +13,4 @@ public interface CheckPageRepository extends JpaRepository<CheckPage, Long> {
 
     @Query("select c from CheckPage c where c.member = :member")
     List<CheckPage> findAllById(Member member);
-
-    Optional<CheckPage> findByIdAndMember(Long CheckPageId, Member member);
 }

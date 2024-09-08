@@ -62,7 +62,7 @@ public class CheckPageController {
     })
     public BasicResponse<CheckPageResponse> findOne(@PathVariable(name = "check_page_id") Long checkPageId, HttpServletRequest request) {
         Member member = memberService.loadMember(request);
-        return ResponseUtil.success(checkPageService.findCheckPage(checkPageId, member));
+        return ResponseUtil.success(checkPageService.findCheckPage(checkPageId));
     }
 
     @DeleteMapping("/{check_page_id}")

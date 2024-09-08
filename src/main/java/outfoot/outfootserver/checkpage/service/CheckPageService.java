@@ -50,15 +50,15 @@ public class CheckPageService {
         return new CheckPageCountListDto(checkPageRepository.count(), checkPageDtoList);
     }
 
-    public CheckPageResponse findCheckPage(Long checkPageId, Member member) {
-        CheckPage checkPage = findByIdAndMember(checkPageId, member);
+    public CheckPageResponse findCheckPage(Long checkPageId) {
+        CheckPage checkPage = findById(checkPageId);
         return CheckPageResponse.toCheckPage(checkPage);
     }
 
 
     @Transactional
     public Long deleteCheckPage(Long checkPageId, Member member) {
-        CheckPage checkPage = findByIdAndMember(checkPageId, member);
+        CheckPage checkPage = findById(checkPageId);
 
         if (checkPage.getMember() != member) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
@@ -67,14 +67,8 @@ public class CheckPageService {
         return checkPageId;
     }
 
-    public CheckPage findByIdAndMember(Long checkPageId, Member member) {
-        return checkPageRepository.findByIdAndMember(checkPageId, member)
-                .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
-    }
-
     public CheckPage findById(Long checkPageId) {
         return checkPageRepository.findById(checkPageId)
                 .orElseThrow(() -> new CheckPageException(CheckPageErrorCode.CHECKPAGE_NOT_FOUND));
-
     }
 }
