@@ -15,6 +15,8 @@ import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.files.TestFileUploader;
 import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.exception.AuthErrorCode;
+import outfoot.outfootserver.member.exception.AuthException;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +56,11 @@ public class ConfirmService {
 
     @Transactional
     public ConfirmUpdateResponse updateConfirm(Long confirmId, UpdateConfirmRequest dto, Member member) {
-        Confirm confirm = findByIdAndMember(confirmId, member);
+        Confirm confirm = findById(confirmId);
+
+        if (confirm.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
 
         String imageUrl = null;
         if (dto.image() != null && !dto.image().isEmpty()){
@@ -72,7 +78,11 @@ public class ConfirmService {
 
     @Transactional
     public void deleteConfirm(Long confirmId, Member member) {
-        Confirm confirm = findByIdAndMember(confirmId, member);
+        Confirm confirm = findById(confirmId);
+
+        if (confirm.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
 
         if (confirm.getImageUrl() != null) {
             fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
@@ -82,16 +92,11 @@ public class ConfirmService {
 
 
     public ConfirmResponse findConfirm(Long id, Member member){
-        Confirm confirm = findByIdAndMember(id, member);
+        Confirm confirm = findById(id);
         long likeCount = confirm.getLikeCount();
         long dislikeCount = confirm.getDisLikeCount();
         String imageUrl = confirm.getImageUrl();
         return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
-    }
-
-    public Confirm findByIdAndMember (Long confirmId, Member member) {
-        return confirmRepository.findByIdAndMember(confirmId, member)
-                .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
     }
 
     public Confirm findById (Long confirmId) {
