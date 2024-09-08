@@ -46,8 +46,8 @@ public class MemberService {
     }
 
     @Transactional
-    public MyPageResponse update(MyPageRequest dto, Long memberId){
-        Member member = loadMember(memberId);
+    public MyPageResponse update(MyPageRequest dto, HttpServletRequest request){
+        Member member = loadMember(request);
         String originImageUrl = member.getImageUrl();
 
         String imageUrl = null;
@@ -111,8 +111,8 @@ public class MemberService {
                 .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
     }
 
-    public MyProfileResponse findMyInfo(Long id) {
-        Member member = loadMember(id);
+    public MyProfileResponse findMyInfo(HttpServletRequest request) {
+        Member member = loadMember(request);
         return MyProfileResponse.builder()
                 .name(member.getNickname())
                 .myIntro(member.getMyIntro())

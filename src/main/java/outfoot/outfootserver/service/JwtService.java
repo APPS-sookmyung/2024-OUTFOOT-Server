@@ -58,8 +58,10 @@ public class JwtService {
 
     public String getTokenFromHeader(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new TokenException(TokenErrorCode.NOT_FOUND_TOKEN);
+        }
         String token = authorization.substring(7);
-        log.info(token);
         return token;
     }
 
