@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import outfoot.outfootserver.checkpage.dto.CheckPageCountListDto;
 import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
 import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
+import outfoot.outfootserver.checkpage.dto.CheckPageSaveResponse;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
@@ -33,9 +34,9 @@ public class CheckPageController {
             @ApiResponse(responseCode = "200", description = "인증판 생성에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "도장 메이트 번호를 찾을 수 없습니다."),
     })
-    public BasicResponse<CheckPageResponse> saveCheckPage(HttpServletRequest request, @Valid @RequestBody CheckPageRequest dto) {
+    public BasicResponse<CheckPageSaveResponse> saveCheckPage(HttpServletRequest request, @Valid @RequestBody CheckPageRequest dto) {
         Member member = memberService.loadMember(request);
-        CheckPageResponse checkPage = checkPageService.saveCheckPage(dto, member);
+        CheckPageSaveResponse checkPage = checkPageService.saveCheckPage(dto, member);
         return ResponseUtil.success(checkPage);
     }
 

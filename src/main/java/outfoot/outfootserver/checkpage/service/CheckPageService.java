@@ -5,18 +5,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.checkpage.domain.Animal;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
-import outfoot.outfootserver.checkpage.dto.CheckPageCountListDto;
-import outfoot.outfootserver.checkpage.dto.CheckPageListResponse;
-import outfoot.outfootserver.checkpage.dto.CheckPageRequest;
-import outfoot.outfootserver.checkpage.dto.CheckPageResponse;
+import outfoot.outfootserver.checkpage.dto.*;
 import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
+import outfoot.outfootserver.confirm.domain.Confirm;
+import outfoot.outfootserver.confirm.dto.ConfirmImageResponse;
+import outfoot.outfootserver.confirm.dto.ConfirmResponse;
+import outfoot.outfootserver.confirm.repository.ConfirmRepository;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.exception.AuthErrorCode;
 import outfoot.outfootserver.member.exception.AuthException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,16 +26,16 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CheckPageService {
     private final CheckPageRepository checkPageRepository;
+    private final ConfirmRepository confirmRepository;
 
     @Transactional
-    public CheckPageResponse saveCheckPage (CheckPageRequest dto, Member member) {
+    public CheckPageSaveResponse saveCheckPage (CheckPageRequest dto, Member member) {
 
         // animal_type 찾았는데 없으면 오류 (Animal 클래스 예외 전파), 있으면 Animal 반환
         Animal animal = Animal.of(dto.animalId());
 
         CheckPage checkPage = checkPageRepository.save(CheckPageRequest.toCheckPage(dto, animal.getAnimalName(), member));
-
-        return CheckPageResponse.toCheckPage(checkPage);
+        return CheckPageSaveResponse.toCheckPage(checkPage);
 
     }
 
@@ -52,9 +54,14 @@ public class CheckPageService {
 
     public CheckPageResponse findCheckPage(Long checkPageId) {
         CheckPage checkPage = findById(checkPageId);
-        return CheckPageResponse.toCheckPage(checkPage);
-    }
 
+        List<Confirm> confirms = confirmRepository.findByCheckPageId(checkPageId);
+
+        List<ConfirmImageResponse> confirmResponses = confirms.stream()
+                .map(ConfirmImageResponse::toConfirm)
+                .collect(Collectors.toList());
+        return CheckPageResponse.toCheckPage(checkPage, confirmResponses);
+    }
 
     @Transactional
     public Long deleteCheckPage(Long checkPageId, Member member) {
