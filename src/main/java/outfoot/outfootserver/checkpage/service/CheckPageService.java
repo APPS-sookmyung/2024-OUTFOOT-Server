@@ -13,6 +13,8 @@ import outfoot.outfootserver.checkpage.exception.CheckPageErrorCode;
 import outfoot.outfootserver.checkpage.exception.CheckPageException;
 import outfoot.outfootserver.checkpage.repository.CheckPageRepository;
 import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.exception.AuthErrorCode;
+import outfoot.outfootserver.member.exception.AuthException;
 
 import java.util.List;
 
@@ -57,6 +59,10 @@ public class CheckPageService {
     @Transactional
     public Long deleteCheckPage(Long checkPageId, Member member) {
         CheckPage checkPage = findByIdAndMember(checkPageId, member);
+
+        if (checkPage.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
         checkPageRepository.delete(checkPage);
         return checkPageId;
     }
