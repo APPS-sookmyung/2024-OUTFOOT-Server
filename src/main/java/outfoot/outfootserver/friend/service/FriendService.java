@@ -2,6 +2,7 @@ package outfoot.outfootserver.friend.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import outfoot.outfootserver.friend.domain.Friend;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FriendService {
     private final FriendRepository friendRepository;
 
@@ -42,10 +44,13 @@ public class FriendService {
     public  void deleteFriend(Member member, Long friendId) { // TODO: 친구 테이블 내 값도 삭제 필요
         Friend friend = friendRepository.findByFromMemberAndId(member, friendId)
                 .orElseThrow(() -> new FriendException(FriendErrorCode.FRIEND_NOT_FOUND));
+
+        log.info("{friendId}, {memberId}");
+
         if (friend.getFromMember() != member) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
-        friendRepository.delete(friend);;
+        friendRepository.delete(friend);
     }
 
     public FriendCountListResponse findAllFriend(Long memberId){
