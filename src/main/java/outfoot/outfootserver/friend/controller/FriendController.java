@@ -15,6 +15,7 @@ import outfoot.outfootserver.common.response.ResponseUtil;
 import outfoot.outfootserver.friend.dto.FriendCountListResponse;
 import outfoot.outfootserver.friend.service.FriendService;
 import outfoot.outfootserver.member.domain.Member;
+import outfoot.outfootserver.member.dto.MyProfileResponse;
 import outfoot.outfootserver.member.service.MemberService;
 
 @RestController
@@ -85,6 +86,16 @@ public class FriendController {
     public BasicResponse<FriendCountListResponse> findAllFriend(HttpServletRequest request){
         Member member = memberService.loadMember(request);
         return ResponseUtil.success(friendService.findAllFriend(member.getId()));
+    }
+
+    @GetMapping("/{friend_id}/profile")
+    @Operation(summary = "친구 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내 정보 조회에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+    })
+    public BasicResponse<MyProfileResponse> FriendProfile (@PathVariable("friend_id")Long friendId) {
+        return ResponseUtil.success(memberService.loadMemberId(friendId));
     }
 
 }
