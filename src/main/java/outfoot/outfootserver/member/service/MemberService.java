@@ -110,6 +110,18 @@ public class MemberService {
                 .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
     }
 
+    public MyProfileResponse loadMemberId(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new AuthException(AuthErrorCode.MEMBER_NOT_FOUND));
+
+        return MyProfileResponse.builder()
+                .name(member.getNickname())
+                .myIntro(member.getMyIntro())
+                .code(member.getCode())
+                .friendCount(member.getFromMember().size())
+                .build();
+    }
+
     public MyProfileResponse findMyInfo(HttpServletRequest request) {
         Member member = loadMember(request);
         return MyProfileResponse.builder()
