@@ -46,7 +46,7 @@ public class FriendController {
     }
 
     @DeleteMapping("/{friend_id}")
-    @Operation(summary = "친구 추가")
+    @Operation(summary = "친구 삭제")
     @Parameters({
             @Parameter(name = "friend_id", example = "1"),
     })
