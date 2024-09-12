@@ -49,7 +49,7 @@ public class CheckPageService {
                 .map(CheckPageListResponse::toCheckPageList)
                 .toList();
 
-        return new CheckPageCountListDto(checkPageRepository.count(), checkPageDtoList);
+        return new CheckPageCountListDto(checkPageList.size(), checkPageDtoList);
     }
 
     public CheckPageResponse findCheckPage(Long checkPageId) {
