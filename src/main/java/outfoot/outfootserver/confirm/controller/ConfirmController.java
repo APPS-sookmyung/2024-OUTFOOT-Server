@@ -64,8 +64,7 @@ public class ConfirmController {
         return ResponseUtil.success("인증판 삭제 성공");
     }
 
-
-    @Operation(summary = "인증판 수정")
+    @Operation(summary = "인증판 이미지 수정")
     @Parameters({
             @Parameter(name = "confirm id", description = "공백 X", example = "1"),
     })
@@ -73,14 +72,29 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PutMapping("/{id}")
-    public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("id") Long id,
+    @PutMapping("image/{id}")
+    public BasicResponse<ConfirmUpdateResponse> updateImage(@PathVariable("id") Long id,
                                                            HttpServletRequest request,
                                                            @ModelAttribute UpdateConfirmRequest dto){
         Member member = memberService.loadMember(request);
-        return ResponseUtil.success(confirmService.updateConfirm(id, dto, member));
+        return ResponseUtil.success(confirmService.updateImage(id, dto, member));
     }
 
+    @Operation(summary = "인증판 메모 수정")
+    @Parameters({
+            @Parameter(name = "confirm id", description = "공백 X", example = "1"),
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
+    })
+    @PutMapping("content/{id}")
+    public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("id") Long id,
+                                                            HttpServletRequest request,
+                                                            @ModelAttribute UpdateConfirmRequest dto){
+        Member member = memberService.loadMember(request);
+        return ResponseUtil.success(confirmService.updateMemo(id, dto, member));
+    }
 
     @Operation(summary = "인증판 조회")
     @Parameters({

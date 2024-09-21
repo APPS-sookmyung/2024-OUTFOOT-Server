@@ -34,7 +34,7 @@ public class ConfirmService {
     }
 
     @Transactional
-    public ConfirmUpdateResponse updateConfirm(Long confirmId, UpdateConfirmRequest dto, Member member) {
+    public ConfirmUpdateResponse updateImage(Long confirmId, UpdateConfirmRequest dto, Member member) {
         Confirm confirm = findById(confirmId);
 
         if (confirm.getMember() != member) {
@@ -44,11 +44,22 @@ public class ConfirmService {
         if (confirm.getImageUrl() != null) {
             fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
         }
-
         String imageUrl = uploadImage(dto.image());
+        confirm.updateImage(imageUrl);
 
+        Confirm updatedConfirm = confirmRepository.save(confirm);
+        return ConfirmUpdateResponse.toConfirm(updatedConfirm);
+    }
 
-        confirm.updateConfirm(dto.title(), dto.content(), imageUrl);
+    @Transactional
+    public ConfirmUpdateResponse updateMemo(Long confirmId, UpdateConfirmRequest dto, Member member) {
+        Confirm confirm = findById(confirmId);
+
+        if (confirm.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
+        }
+
+        confirm.updateMemo(dto.title(), dto.content());
         Confirm updatedConfirm = confirmRepository.save(confirm);
         return ConfirmUpdateResponse.toConfirm(updatedConfirm);
     }
