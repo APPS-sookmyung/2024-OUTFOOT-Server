@@ -26,8 +26,20 @@ public class ConfirmService {
     private final ConfirmRepository confirmRepository;
     private final TestFileUploader fileUploader;
     private final String path = "confirm/";
+
     @Transactional
     public ConfirmResponse saveConfirm(CheckPage checkPage, ConfirmRequest dto, Member member) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime now = LocalDateTime.now();
+//        String startOfDay = now.toLocalDate().atStartOfDay().format(formatter);
+//        String endOfDay = now.toLocalDate().atTime(23,59,59).format(formatter);
+
+//      하나의 체크페이지에 하루에 한 번 인증 가능
+//        List<Confirm> dailyConfirms = confirmRepository.findByCheckPageIdAndCreatedAtBetween(checkPageId, startOfDay, endOfDay);
+//        if (dailyConfirms.size() >= 1){
+//            throw new ConfirmException(ConfirmErrorCode.CONFIRM_DAILY_LIMIT_EXCEEDED);
+//        }
+
         String imageUrl = uploadImage(dto.image());
         Confirm confirm = confirmRepository.save(ConfirmRequest.toConfirm(dto, checkPage, imageUrl, member));
         return ConfirmResponse.toConfirm(confirm, confirm.getLikeCount(), confirm.getDisLikeCount(), imageUrl);
@@ -82,17 +94,17 @@ public class ConfirmService {
     }
 
 
-    public ConfirmResponse findConfirm(Long id, Member member){
+    public ConfirmResponse findConfirm(Long id, Member member) {
         Confirm confirm = findById(id);
         return ConfirmResponse.toConfirm(confirm, confirm.getLikeCount(), confirm.getDisLikeCount(), confirm.getImageUrl());
     }
 
-    public Confirm findById (Long confirmId) {
+    public Confirm findById(Long confirmId) {
         return confirmRepository.findById(confirmId)
                 .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
     }
 
-    public String uploadImage(MultipartFile image){
+    public String uploadImage(MultipartFile image) {
         if (image == null || image.isEmpty()) {
             throw new AuthException(AuthErrorCode.FILE_NOT_FOUND);
         }

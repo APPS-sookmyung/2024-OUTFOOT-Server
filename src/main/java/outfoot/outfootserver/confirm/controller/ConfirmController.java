@@ -72,7 +72,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PutMapping("image/{id}")
+    @PutMapping("images/{id}")
     public BasicResponse<ConfirmUpdateResponse> updateImage(@PathVariable("id") Long id,
                                                            HttpServletRequest request,
                                                            @ModelAttribute UpdateConfirmRequest dto){
@@ -88,7 +88,7 @@ public class ConfirmController {
             @ApiResponse(responseCode = "200", description = "인증판 수정에 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "인증판을 찾을 수 없습니다."),
     })
-    @PutMapping("content/{id}")
+    @PutMapping("contents/{id}")
     public BasicResponse<ConfirmUpdateResponse> updateMemo(@PathVariable("id") Long id,
                                                             HttpServletRequest request,
                                                             @ModelAttribute UpdateConfirmRequest dto){
