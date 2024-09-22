@@ -116,6 +116,7 @@ public class MemberService {
 
         return MyProfileResponse.builder()
                 .name(member.getNickname())
+                .imageUrl(member.getImageUrl())
                 .myIntro(member.getMyIntro())
                 .code(member.getCode())
                 .friendCount(member.getFromMember().size())
