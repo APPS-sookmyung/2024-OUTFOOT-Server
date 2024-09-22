@@ -26,9 +26,9 @@ public class ConfirmService {
     private final ConfirmRepository confirmRepository;
     private final TestFileUploader fileUploader;
     private final String path = "confirm/";
+
     @Transactional
     public ConfirmResponse saveConfirm(CheckPage checkPage, ConfirmRequest dto, Member member) {
-
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        LocalDateTime now = LocalDateTime.now();
 //        String startOfDay = now.toLocalDate().atStartOfDay().format(formatter);
@@ -40,39 +40,39 @@ public class ConfirmService {
 //            throw new ConfirmException(ConfirmErrorCode.CONFIRM_DAILY_LIMIT_EXCEEDED);
 //        }
 
-        String imageUrl = null;
-        if (dto.image() != null && !dto.image().isEmpty()) {
-            MultipartFile image = dto.image();
-            imageUrl = fileUploader.uploadFile(image, path);
-        }
-
+        String imageUrl = uploadImage(dto.image());
         Confirm confirm = confirmRepository.save(ConfirmRequest.toConfirm(dto, checkPage, imageUrl, member));
-
-        long likeCount = confirm.getLikeCount();
-        long dislikeCount = confirm.getDisLikeCount();
-
-        return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
+        return ConfirmResponse.toConfirm(confirm, confirm.getLikeCount(), confirm.getDisLikeCount(), imageUrl);
     }
 
     @Transactional
-    public ConfirmUpdateResponse updateConfirm(Long confirmId, UpdateConfirmRequest dto, Member member) {
+    public ConfirmUpdateResponse updateImage(Long confirmId, UpdateConfirmRequest dto, Member member) {
         Confirm confirm = findById(confirmId);
 
         if (confirm.getMember() != member) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
 
-        String imageUrl = null;
-        if (dto.image() != null && !dto.image().isEmpty()){
-            if (confirm.getImageUrl() != null){
-                fileUploader.deleteFile(confirm.getImageUrl(), path);
-            }
-            imageUrl = fileUploader.uploadFile(dto.image(), path);
+        if (confirm.getImageUrl() != null) {
+            fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
+        }
+        String imageUrl = uploadImage(dto.image());
+        confirm.updateImage(imageUrl);
+
+        Confirm updatedConfirm = confirmRepository.save(confirm);
+        return ConfirmUpdateResponse.toConfirm(updatedConfirm);
+    }
+
+    @Transactional
+    public ConfirmUpdateResponse updateMemo(Long confirmId, UpdateConfirmRequest dto, Member member) {
+        Confirm confirm = findById(confirmId);
+
+        if (confirm.getMember() != member) {
+            throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
 
-        confirm.updateConfirm(dto.title(), dto.content(), imageUrl);
+        confirm.updateMemo(dto.title(), dto.content());
         Confirm updatedConfirm = confirmRepository.save(confirm);
-
         return ConfirmUpdateResponse.toConfirm(updatedConfirm);
     }
 
@@ -94,17 +94,20 @@ public class ConfirmService {
     }
 
 
-    public ConfirmResponse findConfirm(Long id, Member member){
+    public ConfirmResponse findConfirm(Long id, Member member) {
         Confirm confirm = findById(id);
-        long likeCount = confirm.getLikeCount();
-        long dislikeCount = confirm.getDisLikeCount();
-        String imageUrl = confirm.getImageUrl();
-        return ConfirmResponse.toConfirm(confirm, likeCount, dislikeCount, imageUrl);
+        return ConfirmResponse.toConfirm(confirm, confirm.getLikeCount(), confirm.getDisLikeCount(), confirm.getImageUrl());
     }
 
-    public Confirm findById (Long confirmId) {
+    public Confirm findById(Long confirmId) {
         return confirmRepository.findById(confirmId)
                 .orElseThrow(() -> new ConfirmException(ConfirmErrorCode.CONFIRM_NOT_FOUND));
+    }
 
+    public String uploadImage(MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            throw new AuthException(AuthErrorCode.FILE_NOT_FOUND);
+        }
+        return fileUploader.uploadFile(image, path);
     }
 }

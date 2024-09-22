@@ -60,9 +60,12 @@ public class Confirm extends BaseTimeEntity {
         this.checkPage = checkPage;
     }
 
-    public void updateConfirm(String title, String content, String imageUrl) {
+    public void updateMemo(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void updateImage(String imageUrl) {
         if (imageUrl != null) {
             this.imageUrl = imageUrl;
         }
