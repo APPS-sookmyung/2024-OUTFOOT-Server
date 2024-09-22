@@ -39,9 +39,6 @@ public class Member extends BaseTimeEntity {
     @Column
     private String email;
 
-    // @NotNull
-    private String password;
-
      @Column(name = "provider", nullable = false, length = 10)
     private String provider;
 
@@ -66,12 +63,11 @@ public class Member extends BaseTimeEntity {
     private List<Friend> toMember = new ArrayList<>();
 
     @Builder
-    public Member(UUID username, String nickname, String email, String myIntro, String password, String provider, String providerId, String code, String imageUrl) {
+    public Member(UUID username, String nickname, String email, String myIntro, String provider, String providerId, String code, String imageUrl) {
         this.username = username;
         this.nickname = nickname;
         this.email = email;
         this.myIntro = myIntro;
-        this.password = password;
         this.provider = provider;
         this.providerId = providerId;
         this.code = code;
@@ -87,9 +83,6 @@ public class Member extends BaseTimeEntity {
         }
         if ( dto.myIntro() != null ) {
             this.myIntro = dto.myIntro();
-        }
-        if ( dto.password() != null ) {
-            this.password = dto.password();
         }
         if ( imageUrl != null ) {
             this.imageUrl = imageUrl;

@@ -21,10 +21,6 @@ public class SignUpRequest {
     @Schema(description = "닉네임", example = "ajung")
     private String nickname;
 
-    @Schema(description = "비밀번호", example = "password")
-    @NotBlank
-    private String password;
-
     @Schema(description = "이메일", example = "ajung7038@naver.com")
     @NotBlank @Email
     private String email;
