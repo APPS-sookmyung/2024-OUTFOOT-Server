@@ -23,6 +23,11 @@ public class DislikeService {
 
     @Transactional
     public void addDislike(Member member, Confirm confirm) {
+
+        if (confirm.getMember().equals(member)) {
+            throw new EmotionException(EmotionErrorCode.NOT_PRESSED_SELF);
+        }
+
         dislikeRepository.findByDislike(member, confirm)
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.DISLIKE_ALREADY_PRESSED);
@@ -51,7 +56,9 @@ public class DislikeService {
 
                     confirm.getDislikes().remove(dislike);
                     confirmRepository.save(confirm);
-                } , () -> {});
+                }, () -> {
+                    throw new EmotionException(EmotionErrorCode.DISLIKE_NOT_PRESSED);
+                });
     }
 
 }
