@@ -74,7 +74,7 @@ public class Member extends BaseTimeEntity {
         this.imageUrl = imageUrl;
     }
 
-    public void updateMember(MyPageRequest dto, String imageUrl){
+    public void updateMember(MyPageRequest dto){
         if ( dto.nickname() != null ) {
             this.nickname = dto.nickname();
         }
@@ -84,6 +84,9 @@ public class Member extends BaseTimeEntity {
         if ( dto.myIntro() != null ) {
             this.myIntro = dto.myIntro();
         }
+    }
+
+    public void updateMember(String imageUrl) {
         if ( imageUrl != null ) {
             this.imageUrl = imageUrl;
         }
