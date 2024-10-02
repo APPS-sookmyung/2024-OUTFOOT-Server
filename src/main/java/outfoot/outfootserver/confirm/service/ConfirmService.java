@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.confirm.domain.Confirm;
-import outfoot.outfootserver.confirm.dto.ConfirmRequest;
-import outfoot.outfootserver.confirm.dto.ConfirmResponse;
-import outfoot.outfootserver.confirm.dto.ConfirmUpdateResponse;
-import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
+import outfoot.outfootserver.confirm.dto.*;
 import outfoot.outfootserver.confirm.exception.ConfirmErrorCode;
 import outfoot.outfootserver.confirm.exception.ConfirmException;
 import outfoot.outfootserver.confirm.repository.ConfirmRepository;
@@ -46,7 +43,7 @@ public class ConfirmService {
     }
 
     @Transactional
-    public ConfirmUpdateResponse updateImage(Long confirmId, UpdateConfirmRequest dto, Member member) {
+    public ConfirmUpdateResponse updateImage(Long confirmId, UpdateConfirmImageRequest dto, Member member) {
         Confirm confirm = findById(confirmId);
 
         if (!confirm.getMember().equals(member)) {
