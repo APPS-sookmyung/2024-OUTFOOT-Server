@@ -48,6 +48,13 @@ public class MemberService {
     @Transactional
     public MyPageResponse update(MyPageRequest dto, HttpServletRequest request){
         Member member = loadMember(request);
+        member.updateMember(dto);
+        return MyPageResponse.toMyPage(member, member.getImageUrl());
+    }
+
+    @Transactional
+    public MyPageResponse updateImage (MyPageImageRequest dto, HttpServletRequest request){
+        Member member = loadMember(request);
         String originImageUrl = member.getImageUrl();
 
         String imageUrl = null;
@@ -61,10 +68,10 @@ public class MemberService {
                     fileUploader.deleteFile(originImageUrl, path);
                 }
             } else {
-            // 새로운 이미지가 존재하지 않는 경우
+                // 새로운 이미지가 존재하지 않는 경우
                 imageUrl = originImageUrl;
             }
-            member.updateMember(dto, imageUrl);
+            member.updateMember(imageUrl);
         } catch (Exception e) {
             throw new AuthException(AuthErrorCode.FILE_NOT_FOUND);
         }

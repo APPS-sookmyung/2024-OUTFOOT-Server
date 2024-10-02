@@ -49,7 +49,7 @@ public class ConfirmService {
     public ConfirmUpdateResponse updateImage(Long confirmId, UpdateConfirmRequest dto, Member member) {
         Confirm confirm = findById(confirmId);
 
-        if (confirm.getMember() != member) {
+        if (!confirm.getMember().equals(member)) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
 
@@ -67,7 +67,7 @@ public class ConfirmService {
     public ConfirmUpdateResponse updateMemo(Long confirmId, UpdateConfirmRequest dto, Member member) {
         Confirm confirm = findById(confirmId);
 
-        if (confirm.getMember() != member) {
+        if (!confirm.getMember().equals(member)) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
 
@@ -80,14 +80,14 @@ public class ConfirmService {
     public void deleteConfirm(Long confirmId, Member member) {
         Confirm confirm = findById(confirmId);
 
-        if (confirm.getMember() != member) {
+        if (!confirm.getMember().equals(member)) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
 
         if (confirm.getImageUrl() != null) {
             fileUploader.deleteFile(confirm.getImageUrl(), "confirm");
         }
-        if (confirm.getMember() != member) {
+        if (!confirm.getMember().equals(member)) {
             throw new AuthException(AuthErrorCode.UNAUTHORIZED_USER);
         }
         confirmRepository.delete(confirm);

@@ -12,7 +12,9 @@ public enum EmotionErrorCode {
     DISLIKE_ALREADY_PRESSED("부정 버튼을 중복으로 누를 수 없습니다."),
     DISLIKE_NOT_PRESSED("부정 버튼이 눌려있지 않아 취소가 불가능합니다."),
 
-    DUPLICATED_EMOTION("중복으로 버튼을 누를 수 없습니다. (인정, 부정)");
+    DUPLICATED_EMOTION("중복으로 버튼을 누를 수 없습니다. (인정, 부정)"),
+
+    NOT_PRESSED_SELF("자신의 인증판에는 좋아요 또는 싫어요를 누를 수 없습니다.");
 
     private String message;
 }

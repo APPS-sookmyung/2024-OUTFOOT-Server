@@ -43,6 +43,17 @@ public class MemberController {
         return ResponseUtil.success(member);
     }
 
+    @PutMapping("/my/images")
+    @Operation(summary = "프로필 내용 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 정보 수정에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 회원입니다."),
+    })
+    public BasicResponse<MyPageResponse> UpdateMyPageWithImage (@Valid @ModelAttribute MyPageImageRequest dto, HttpServletRequest request) {
+        MyPageResponse member = memberService.updateImage(dto, request);
+        return ResponseUtil.success(member);
+    }
+
     @GetMapping("/my")
     @Operation(summary = "내 정보 조회")
     @ApiResponses(value = {
@@ -55,7 +66,6 @@ public class MemberController {
 
     @GetMapping("/test/test")
     public BasicResponse<Member> testTest (HttpServletRequest request) {
-//        System.out.println(request);
         return ResponseUtil.success(memberService.loadMember(request));
     }
 }
