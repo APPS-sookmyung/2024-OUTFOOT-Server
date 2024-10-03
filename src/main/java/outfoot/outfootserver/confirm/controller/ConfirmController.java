@@ -14,10 +14,7 @@ import outfoot.outfootserver.checkpage.domain.CheckPage;
 import outfoot.outfootserver.checkpage.service.CheckPageService;
 import outfoot.outfootserver.common.response.BasicResponse;
 import outfoot.outfootserver.common.response.ResponseUtil;
-import outfoot.outfootserver.confirm.dto.ConfirmRequest;
-import outfoot.outfootserver.confirm.dto.ConfirmResponse;
-import outfoot.outfootserver.confirm.dto.ConfirmUpdateResponse;
-import outfoot.outfootserver.confirm.dto.UpdateConfirmRequest;
+import outfoot.outfootserver.confirm.dto.*;
 import outfoot.outfootserver.confirm.service.ConfirmService;
 import outfoot.outfootserver.member.domain.Member;
 import outfoot.outfootserver.member.service.MemberService;
@@ -75,7 +72,7 @@ public class ConfirmController {
     @PutMapping("images/{id}")
     public BasicResponse<ConfirmUpdateResponse> updateImage(@PathVariable("id") Long id,
                                                            HttpServletRequest request,
-                                                           @ModelAttribute UpdateConfirmRequest dto){
+                                                           @ModelAttribute UpdateConfirmImageRequest dto){
         Member member = memberService.loadMember(request);
         return ResponseUtil.success(confirmService.updateImage(id, dto, member));
     }
