@@ -9,12 +9,14 @@ import outfoot.outfootserver.member.domain.Member;
 public record FriendListResponse(
         @Schema(description = "친구 아이디", example = "1") Long id,
         @Schema(description = "친구 닉네임", example = "정정") String nickname,
-        @Schema(description = "친구 한 줄 소개", example = "안녕하세요") String intro) {
+        @Schema(description = "친구 한 줄 소개", example = "안녕하세요") String intro,
+        @Schema(description = "친구 프로필 이미지", example = "img/png") String imageUrl) {
 
     public static FriendListResponse toFriendList(Friend friend){
         return FriendListResponse.builder()
                 .id(friend.getToMember().getId())
                 .nickname(friend.getNickname())
+                .imageUrl(friend.getToMember().getImageUrl())
                 .intro(friend.getToMember().getMyIntro())
                 .build();
     }

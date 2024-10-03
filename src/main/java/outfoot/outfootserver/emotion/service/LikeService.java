@@ -22,6 +22,11 @@ public class LikeService {
 
     @Transactional
     public void addLike(Member member, Confirm confirm) {
+
+        if (confirm.getMember().equals(member)) {
+            throw new EmotionException(EmotionErrorCode.NOT_PRESSED_SELF);
+        }
+
         likeRepository.findByLike(member, confirm)
                 .ifPresent(e -> {
                     throw new EmotionException(EmotionErrorCode.LIKE_ALREADY_PRESSED);
@@ -38,7 +43,6 @@ public class LikeService {
                 .build();
 
         likeRepository.save(like);
-
         confirm.getLikes().add(like);
         confirmRepository.save(confirm);
     }
@@ -50,6 +54,8 @@ public class LikeService {
                     likeRepository.delete(like);
                     confirm.getLikes().remove(like);
                     confirmRepository.save(confirm);
-                }, () -> {});
+                }, () -> {
+                    throw new EmotionException(EmotionErrorCode.LIKE_NOT_PRESSED);
+                });
     }
 }
